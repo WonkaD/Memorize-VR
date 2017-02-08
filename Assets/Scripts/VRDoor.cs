@@ -10,7 +10,7 @@ public class VRDoor : MonoBehaviour {
     [SerializeField] private AudioClip _overAudio;
     [SerializeField] private AudioClip _selectAudio;
     [SerializeField] private Animator animator;
-    private bool block = true;
+    private bool Unlock = true;
     private bool openDoor = false;
     private void OnEnable()
     {
@@ -30,21 +30,21 @@ public class VRDoor : MonoBehaviour {
     }
 
 
-    public void SetBlock(bool status)
+    public void SetUnlock(bool status)
     {
-        block = status;
+        Unlock = status;
     }
 
-    public bool GetBlock()
+    public bool GetUnlock()
     {
-        return block;
+        return Unlock;
     }
 
     //Handle the Over event
     private void HandleOver()
     {
         //TODO reproducir sonido
-        if (!block) gameObject.GetComponent<AudioSource>().PlayOneShot(_overAudio);
+        if (Unlock) gameObject.GetComponent<AudioSource>().PlayOneShot(_overAudio);
     }
 
 
@@ -60,12 +60,10 @@ public class VRDoor : MonoBehaviour {
     private void HandleClick()
     {
         //TODO teletransportar y enegrecer la pantalla
-        if (!block)
-        {
-            animator.SetTrigger("Action");
-            gameObject.GetComponent<AudioSource>().PlayOneShot(_selectAudio);
-            openDoor = !openDoor;
-        }
+        if (!Unlock) return;
+        animator.SetTrigger("Action");
+        gameObject.GetComponent<AudioSource>().PlayOneShot(_selectAudio);
+        openDoor = !openDoor;
     }
 
 

@@ -1,5 +1,7 @@
-﻿public interface RoomGame
-{
-    void Start();
+﻿using System;
 
+[Serializable]
+public abstract class RoomGame
+{
+    public abstract void Start();
 }

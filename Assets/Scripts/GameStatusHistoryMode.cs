@@ -6,7 +6,7 @@ namespace Assets.Scripts
 {
     public class GameStatusHistoryMode
     {
-        public Dictionary<int, Level> Levels;
+        public Dictionary<int, Status> Levels;
         private const string PathFile = "gameSave";
 
         public void SaveStatus()
@@ -28,5 +28,10 @@ namespace Assets.Scripts
 
         }
 
+        public class Status
+        {
+            public bool UnlockStatus;
+            public List<Punctuation> Punctuations;
+        }
     }
 }

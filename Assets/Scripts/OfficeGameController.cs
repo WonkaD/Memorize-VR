@@ -6,19 +6,36 @@ using UnityEngine;
 
 public class OfficeGameController : MonoBehaviour
 {
-    private Dictionary<int, Level> levels;
-    [SerializeField] private GameStatusHistoryMode statusGame;
+    [SerializeField] private List<Level> GameLevels;
+    private GameStatusHistoryMode saveGame;
 
 	// Use this for initialization
 	void Start ()
 	{
-	    statusGame.LoadStatus();
-	    levels = statusGame.Levels;
+	    saveGame.LoadStatus();
+	    loadLevels();
 	}
 
-    void Finish()
+    private void loadLevels()
     {
-        statusGame.SaveStatus();
+        var savedLevels = saveGame.Levels;
+        if (savedLevels == null || GameLevels == null) return;
+        foreach (var savedLevel in savedLevels)
+        {
+            if (GameLevels.Count >= savedLevel.Key) continue;
+            RestoreLevel(savedLevel.Value, GameLevels[savedLevel.Key-1] );
+        }
+    }
+
+    private static void RestoreLevel(GameStatusHistoryMode.Status savedLevel, Level gameLevel)
+    {
+        gameLevel.recordPunctuations = savedLevel.Punctuations;
+        gameLevel.levelDoor.SetUnlock(savedLevel.UnlockStatus);
+    }
+
+    public void Finish()
+    {
+        saveGame.SaveStatus();
     }
 	
 	// Update is called once per frame
