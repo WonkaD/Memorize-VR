@@ -10,7 +10,7 @@ public class VRDoor : MonoBehaviour {
     [SerializeField] private AudioClip _overAudio;
     [SerializeField] private AudioClip _selectAudio;
     [SerializeField] private Animator animator;
-    private bool Unlock = true;
+    private bool Unlock = false;
     private bool openDoor = false;
     private void OnEnable()
     {
