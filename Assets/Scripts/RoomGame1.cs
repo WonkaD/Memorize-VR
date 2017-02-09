@@ -18,13 +18,13 @@ namespace Assets.Scripts
 
         public override void StartGame()
         {
-            gameController.StartLevel(1);
+            gameController.StartLevel(0);
             Debug.Log("Empezando juego...");
         }
 
         public override void FinishGame()
         {
-            gameController.FinishLevel(1, new Punctuation());
+            gameController.FinishLevel(0, new Punctuation());
         }
     }
 }
