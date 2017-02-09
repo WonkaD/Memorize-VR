@@ -1,9 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using VRStandardAssets.Utils;
 
-namespace VRStandardAssets.Utils
+namespace Assets.VR.VRSampleScenes.Scripts.Utils
 {
     // This class simply allows the user to return to the main menu.
     public class ReturnToMainMenu : MonoBehaviour

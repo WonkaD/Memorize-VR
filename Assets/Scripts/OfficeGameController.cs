@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 
 namespace Assets.Scripts
@@ -62,15 +60,30 @@ namespace Assets.Scripts
 
         public void StartLevel(int levelIndex)
         {
-
             _gameLevels[levelIndex].LevelDoor.CloseDoorAndLock();
+
         }
         public void FinishLevel(int levelIndex, Punctuation punctuation)
         {
             var level = _gameLevels[levelIndex];
-            level.RecordPunctuations.Add(punctuation);
+
+            if (punctuation != null)
+            {
+                level.RecordPunctuations.Add(punctuation);
+                UnlockNextLevel(levelIndex);
+            }
+
             level.LevelDoor.OpenDoorAndUnlock();
         }
+
+        private void UnlockNextLevel(int actualLevelIndex)
+        {
+            actualLevelIndex++;
+            if (actualLevelIndex >= _gameLevels.Count) return;
+            _gameLevels[actualLevelIndex].LevelDoor.SetUnlock(true);
+
+        }
+
         // Update is called once per frame
         void Update () {
 		
