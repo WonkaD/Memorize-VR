@@ -2,6 +2,7 @@ using System;
 
 namespace Assets.Scripts
 {
+    [Serializable]
     public class Punctuation
     {
         public DateTime date;

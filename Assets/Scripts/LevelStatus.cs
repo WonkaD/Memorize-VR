@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
+    [Serializable]
     public class LevelStatus
     {
         public bool Unlock;

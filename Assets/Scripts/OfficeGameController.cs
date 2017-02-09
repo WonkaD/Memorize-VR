@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -9,17 +9,20 @@ namespace Assets.Scripts
 {
     public class OfficeGameController : MonoBehaviour
     {
-        [SerializeField] private List<Level> GameLevels;
-        private List<LevelStatus> SaveGame;
-        public string PathFile = "saveGame.xml";
+        [SerializeField] private List<Level> _gameLevels;
+        private List<LevelStatus> _saveGame;
+        public string PathFile = "saveGame.bin";
 
         // Use this for initialization
         void Start ()
         {
-            Load();
-            SimulateGame();
-            Save();
+            if (!Load()) UnlockFirstLevel();
+        }
 
+        private void UnlockFirstLevel()
+        {
+            var firstDoor = _gameLevels.FirstOrDefault();
+            if (firstDoor != null) firstDoor.levelDoor.SetUnlock(true);
         }
 
         private void SimulateGame()
@@ -28,7 +31,7 @@ namespace Assets.Scripts
             
             for (int i = 0; i < Convert.ToInt32(Random.Range(2, 9)); i++)
             {
-                GameLevels[random.Next(2)].recordPunctuations.Add(new Punctuation(Convert.ToInt64(Random.Range(0.5f, 2.5f)), Convert.ToInt32(Random.Range(0, 2500))));
+                _gameLevels[random.Next(2)].recordPunctuations.Add(new Punctuation(Convert.ToInt64(Random.Range(0.5f, 2.5f)), Convert.ToInt32(Random.Range(0, 2500))));
             }
             
         }
@@ -36,24 +39,25 @@ namespace Assets.Scripts
         public void Save()
         {
             List<LevelStatus> statusList = new List<LevelStatus>();
-            foreach (var gameLevel in GameLevels)
+            foreach (var gameLevel in _gameLevels)
             {
                 statusList.Add(new LevelStatus(gameLevel));
             }
-            SaveGame = statusList;
-            GameFileManager.Save(PathFile, SaveGame);
+            _saveGame = statusList;
+            BinaryFileManager.Save(PathFile,_saveGame);
         }
 
-        private void Load()
+        private bool Load()
         {
-            SaveGame = GameFileManager.Load(PathFile);
-            var savedLevels = SaveGame;
-            if (savedLevels == null || GameLevels == null) return;
+            _saveGame = BinaryFileManager.Load(PathFile);
+            var savedLevels = _saveGame;
+            if (savedLevels == null || _gameLevels == null) return false;
 
             for (int i = 0; i < savedLevels.Count; i++)
             {
-                RestoreLevel(savedLevels[i], GameLevels[i]);
+                RestoreLevel(savedLevels[i], _gameLevels[i]);
             }
+            return true;
         }
 
         private static void RestoreLevel(LevelStatus savedLevel, Level gameLevel)
