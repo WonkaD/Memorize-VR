@@ -12,8 +12,8 @@ namespace Assets.Scripts
             
         public LevelStatus(Level gameLevel)
         {
-            Unlock = gameLevel.levelDoor.GetUnlock();
-            Punctuations = gameLevel.recordPunctuations;
+            Unlock = gameLevel.LevelDoor.GetUnlock();
+            Punctuations = gameLevel.RecordPunctuations;
         }
 
         public LevelStatus()

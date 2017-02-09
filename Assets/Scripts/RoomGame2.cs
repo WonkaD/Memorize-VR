@@ -19,4 +19,9 @@ public class RoomGame2 : RoomGame {
     {
         throw new System.NotImplementedException();
     }
+
+    public override void FinishGame()
+    {
+        throw new System.NotImplementedException();
+    }
 }

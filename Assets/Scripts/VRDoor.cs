@@ -6,47 +6,61 @@ using VRStandardAssets.Utils;
 
 public class VRDoor : MonoBehaviour {
 
-    [SerializeField] private VRInteractiveItem interactiveItem;
+    [SerializeField] private VRInteractiveItem _interactiveItem;
     [SerializeField] private AudioClip _overAudio;
     [SerializeField] private AudioClip _selectAudio;
     [SerializeField] private Animator animator;
-    private bool Unlock = false;
-    private bool openDoor = false;
+    private bool _unlock = false;
+    private bool _openDoor = false;
     private void OnEnable()
     {
-        interactiveItem.OnOver += HandleOver;
-        interactiveItem.OnOut += HandleOut;
-        interactiveItem.OnClick += HandleClick;
-        interactiveItem.OnDoubleClick += HandleDoubleClick;
+        _interactiveItem.OnOver += HandleOver;
+        _interactiveItem.OnOut += HandleOut;
+        _interactiveItem.OnClick += HandleClick;
+        _interactiveItem.OnDoubleClick += HandleDoubleClick;
     }
 
 
     private void OnDisable()
     {
-        interactiveItem.OnOver -= HandleOver;
-        interactiveItem.OnOut -= HandleOut;
-        interactiveItem.OnClick -= HandleClick;
-        interactiveItem.OnDoubleClick -= HandleDoubleClick;
+        _interactiveItem.OnOver -= HandleOver;
+        _interactiveItem.OnOut -= HandleOut;
+        _interactiveItem.OnClick -= HandleClick;
+        _interactiveItem.OnDoubleClick -= HandleDoubleClick;
     }
 
+    public void OpenDoorAndUnlock()
+    {
+        SetUnlock(true);
+        if (_openDoor) return;
+        animator.SetTrigger("Action");
+        _openDoor = true;
+    }
+
+    public void CloseDoorAndLock()
+    {
+        SetUnlock(false);
+        if (!_openDoor) return;
+        animator.SetTrigger("Action");
+        _openDoor = false;
+    }
 
     public void SetUnlock(bool status)
     {
-        Unlock = status;
+        _unlock = status;
     }
 
     public bool GetUnlock()
     {
-        return Unlock;
+        return _unlock;
     }
 
     //Handle the Over event
     private void HandleOver()
     {
         //TODO reproducir sonido
-        if (Unlock) gameObject.GetComponent<AudioSource>().PlayOneShot(_overAudio);
+        if (_unlock) gameObject.GetComponent<AudioSource>().PlayOneShot(_overAudio);
     }
-
 
     //Handle the Out event
     private void HandleOut()
@@ -55,17 +69,15 @@ public class VRDoor : MonoBehaviour {
 
     }
 
-
     //Handle the Click event
     private void HandleClick()
     {
         //TODO teletransportar y enegrecer la pantalla
-        if (!Unlock) return;
+        if (!_unlock) return;
         animator.SetTrigger("Action");
+        _openDoor = !_openDoor;
         gameObject.GetComponent<AudioSource>().PlayOneShot(_selectAudio);
-        openDoor = !openDoor;
     }
-
 
     //Handle the DoubleClick event
     private void HandleDoubleClick()

@@ -1,22 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Assets.Scripts;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class RoomGame1 : RoomGame {
+namespace Assets.Scripts
+{
+    public class RoomGame1 : RoomGame {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+        [SerializeField] private OfficeGameController gameController;
+
+        // Use this for initialization
+        void Start () {
+		    
+        }
 	
-	// Update is called once per frame
-	void Update () {
+        // Update is called once per frame
+        void Update () {
 		
-	}
+        }
 
-    public override void StartGame()
-    {
-        throw new System.NotImplementedException();
+        public override void StartGame()
+        {
+            gameController.StartLevel(1);
+            Debug.Log("Empezando juego...");
+        }
+
+        public override void FinishGame()
+        {
+            gameController.FinishLevel(1, new Punctuation());
+        }
     }
 }

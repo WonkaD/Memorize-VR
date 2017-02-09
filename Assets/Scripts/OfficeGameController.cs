@@ -22,21 +22,10 @@ namespace Assets.Scripts
         private void UnlockFirstLevel()
         {
             var firstDoor = _gameLevels.FirstOrDefault();
-            if (firstDoor != null) firstDoor.levelDoor.SetUnlock(true);
+            if (firstDoor != null) firstDoor.LevelDoor.SetUnlock(true);
         }
 
-        private void SimulateGame()
-        {
-            var random = new System.Random();
-            
-            for (int i = 0; i < Convert.ToInt32(Random.Range(2, 9)); i++)
-            {
-                _gameLevels[random.Next(2)].recordPunctuations.Add(new Punctuation(Convert.ToInt64(Random.Range(0.5f, 2.5f)), Convert.ToInt32(Random.Range(0, 2500))));
-            }
-            
-        }
-
-        public void Save()
+        private void Save()
         {
             List<LevelStatus> statusList = new List<LevelStatus>();
             foreach (var gameLevel in _gameLevels)
@@ -62,15 +51,26 @@ namespace Assets.Scripts
 
         private static void RestoreLevel(LevelStatus savedLevel, Level gameLevel)
         {
-            gameLevel.recordPunctuations = savedLevel.Punctuations;
-            gameLevel.levelDoor.SetUnlock(savedLevel.Unlock);
+            gameLevel.RecordPunctuations = savedLevel.Punctuations;
+            gameLevel.LevelDoor.SetUnlock(savedLevel.Unlock);
         }
 
         public void Finish()
         {
             Save();
         }
-	
+
+        public void StartLevel(int levelIndex)
+        {
+
+            _gameLevels[levelIndex].LevelDoor.CloseDoorAndLock();
+        }
+        public void FinishLevel(int levelIndex, Punctuation punctuation)
+        {
+            var level = _gameLevels[levelIndex];
+            level.RecordPunctuations.Add(punctuation);
+            level.LevelDoor.OpenDoorAndUnlock();
+        }
         // Update is called once per frame
         void Update () {
 		

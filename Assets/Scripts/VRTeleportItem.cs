@@ -55,7 +55,7 @@ public class VRTeleportItem : MonoBehaviour {
 
 
     //Handle the Click event
-    private void HandleClick()
+    public void HandleClick()
     {
         //TODO teletransportar y enegrecer la pantalla
         gameObject.GetComponent<AudioSource>().PlayOneShot(_selectAudio);

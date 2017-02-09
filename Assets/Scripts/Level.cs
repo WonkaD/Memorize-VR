@@ -7,9 +7,9 @@ namespace Assets.Scripts
     [Serializable]
     public class Level
     {
-        [SerializeField] public RoomGame gameLevel;
-        [SerializeField] public VRDoor levelDoor;
-        public List<Punctuation> recordPunctuations = new List<Punctuation>();
+        [SerializeField] public RoomGame GameLevel;
+        [SerializeField] public VRDoor LevelDoor;
+        public List<Punctuation> RecordPunctuations = new List<Punctuation>();
 
     }
 }

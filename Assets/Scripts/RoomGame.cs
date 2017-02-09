@@ -5,6 +5,8 @@ namespace Assets.Scripts
     public abstract class RoomGame:MonoBehaviour
     {
         public abstract void StartGame();
+        public abstract void FinishGame();
+
 
         void Start()
         {
