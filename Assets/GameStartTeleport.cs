@@ -18,7 +18,7 @@ namespace Assets
         private GameObject MainCamera;
 
 
-        private void Start()
+        private void Awake()
         {
             Player = GameObject.FindGameObjectWithTag("Player");
             MainCamera = GameObject.FindGameObjectWithTag("MainCamera");

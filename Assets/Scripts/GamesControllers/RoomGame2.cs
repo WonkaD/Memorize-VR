@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts.GamesControllers
+﻿using System.Collections;
+
+namespace Assets.Scripts.GamesControllers
 {
     public class RoomGame2 : RoomGame {
 
@@ -18,6 +20,11 @@
         }
 
         public override void FinishGame()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override IEnumerator ClickEvent(GameObjectController gameObjectController)
         {
             throw new System.NotImplementedException();
         }
