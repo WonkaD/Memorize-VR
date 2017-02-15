@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Assets.Scripts.GamesControllers;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.Level
 {
     [Serializable]
     public class Level

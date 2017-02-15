@@ -7,7 +7,7 @@ namespace Assets.Scripts
 {
     public class OfficeGameController : MonoBehaviour
     {
-        [SerializeField] private List<Level> _gameLevels;
+        [SerializeField] private List<Level.Level> _gameLevels;
         private List<LevelStatus> _saveGame;
         public string PathFile = "saveGame.bin";
 
@@ -47,7 +47,7 @@ namespace Assets.Scripts
             return true;
         }
 
-        private static void RestoreLevel(LevelStatus savedLevel, Level gameLevel)
+        private static void RestoreLevel(LevelStatus savedLevel, Level.Level gameLevel)
         {
             gameLevel.RecordPunctuations = savedLevel.Punctuations;
             gameLevel.LevelDoor.SetUnlock(savedLevel.Unlock);
@@ -63,16 +63,16 @@ namespace Assets.Scripts
             _gameLevels[levelIndex].LevelDoor.CloseDoorAndLock();
 
         }
-        public void FinishLevel(int levelIndex, Punctuation punctuation)
+        public void FinishLevel(int levelIndex, Punctuation punctuation, bool gameComplete)
         {
             var level = _gameLevels[levelIndex];
 
-            if (punctuation != null)
+            if (gameComplete)
             {
-                level.RecordPunctuations.Add(punctuation);
                 UnlockNextLevel(levelIndex);
             }
 
+            level.RecordPunctuations.Add(punctuation);
             level.LevelDoor.OpenDoorAndUnlock();
         }
 

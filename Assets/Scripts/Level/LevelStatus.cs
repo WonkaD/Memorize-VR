@@ -10,7 +10,7 @@ namespace Assets.Scripts
         public bool Unlock;
         public List<Punctuation> Punctuations;
             
-        public LevelStatus(Level gameLevel)
+        public LevelStatus(Level.Level gameLevel)
         {
             Unlock = gameLevel.LevelDoor.GetUnlock();
             Punctuations = gameLevel.RecordPunctuations;
