@@ -1,23 +1,26 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using VRStandardAssets.Utils;
 
 namespace Assets.Scripts.GamesControllers
 {
     public class GameObjectController : MonoBehaviour
     {
+        public GameObject GameObjectContainer;
         private GameObject _visibleGameObject;
         [SerializeField] private GameObject _abstractObject;
-        public GameObject ConcreteObject;
-        private VRInteractiveItem _interactiveItem;
-        private ParticleSystem _particle;
+        [HideInInspector] public GameObject ConcreteObject;
+        [SerializeField] private VRInteractiveItem _interactiveItem;
+        [SerializeField] private ParticleSystem _particle;
         private RoomGame _gameController;
         
 
-        public void Init(RoomGame roomGame, GameObject concreteObject, Vector3 position)
+        public GameObjectController Init(RoomGame roomGame, GameObject concreteObject, Vector3 position)
         {
             _gameController = roomGame;
             ConcreteObject = concreteObject;
             transform.localPosition = position;
+            return this;
         }
 
         public void ShowConcreteObject()
@@ -32,8 +35,6 @@ namespace Assets.Scripts.GamesControllers
 
         private void Awake()
         {
-            _interactiveItem = gameObject.GetComponent<VRInteractiveItem>();
-            _particle = gameObject.GetComponent<ParticleSystem>();
             _particle.Stop();
             ReplaceGameObject(_abstractObject);
             
@@ -43,7 +44,7 @@ namespace Assets.Scripts.GamesControllers
         private void ReplaceGameObject(GameObject newObject)
         {
             Destroy(_visibleGameObject);
-            _visibleGameObject = Instantiate(newObject,gameObject.transform);
+            _visibleGameObject = Instantiate(newObject, GameObjectContainer.transform);
             _visibleGameObject.transform.localPosition = new Vector3(0,0,0);
         }
 
@@ -61,6 +62,14 @@ namespace Assets.Scripts.GamesControllers
             _interactiveItem.OnOut -= HandleOut;
             _interactiveItem.OnClick -= HandleClick;
             Destroy(gameObject);
+        }
+
+        public void WinPosition()
+        {
+            _interactiveItem.OnOver -= HandleOver;
+            _interactiveItem.OnOut -= HandleOut;
+            _interactiveItem.OnClick -= HandleClick;
+            GameObjectContainer.transform.Translate(Vector3.up * 2f);
         }
 
 
@@ -86,7 +95,7 @@ namespace Assets.Scripts.GamesControllers
             StartCoroutine(_gameController.ClickEvent(this));
         }
 
-        protected bool Equals(GameObjectController other)
+        public bool SameConcreteObject(GameObjectController other)
         {
             return ConcreteObject.Equals(other.ConcreteObject);
         }
@@ -95,9 +104,11 @@ namespace Assets.Scripts.GamesControllers
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((GameObjectController) obj);
+            var obj2 = obj as GameObjectController;
+            return (obj2 != null && obj2.ConcreteObject.Equals(ConcreteObject) && obj2.transform.localPosition.Equals(transform.localPosition));
         }
+
+
 
     }
 }

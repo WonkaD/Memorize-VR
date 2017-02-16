@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 using VRStandardAssets.Utils;
-using Random = System.Random;
-
 
 namespace Assets.Scripts.GamesControllers
 {
@@ -22,13 +17,16 @@ namespace Assets.Scripts.GamesControllers
         public float RightLimit;
         public float UpLimit;
 
-
         private float _maxTimeSeconds;
         private long _showTimeMillis;
-        private int _sizeLevel = 0;
-        private int _points = 0;
+        private int _sizeLevel;
+        private int _points;
+
+        private int success;
         private float _timeLeft;
-        private GameObjectController Selected;
+        private IEnumerator countDown;
+        private List<GameObjectController> _generateObjectList = new List<GameObjectController>();
+        private GameObjectController _selectedGameObject;
         private List<Vector3> positionList  = new List<Vector3>();
         private int bonusMultiplier = 1;
 
@@ -36,44 +34,65 @@ namespace Assets.Scripts.GamesControllers
 
         // Update is called once per frame
 
+
         private void Awake()
         {
             MainCamera = GameObject.FindGameObjectWithTag("MainCamera");
-            GeneratePositionList();
+
+        }
+
+        private void Shuffle()
+        {
             Utils.Shuffle(_concreteGameObjects);
             Utils.Shuffle(positionList);
-
         }
 
         private void GeneratePositionList()
         {
-            IEnumerable<float> yPosition = Utils.FloatRange(0.5f, 3.5f, 1.5f);
-            IEnumerable<float> xPosition = Utils.FloatRange(1f, -10f, -2f);
-            foreach (var x in xPosition)
-            {
-                var vector3 = new Vector3(x, 0, 0);
-                foreach (var y in yPosition)
-                {
-                    positionList.Add(vector3 + new Vector3(0, y, 0));
-                }
-            }
+            //positionList = Utils.PosicionInPlane(1f, -10f, -2f, 0.5f, 3.5f, 1.5f); //Plane Position
+            positionList = Utils.PosicionInCircle(new Vector3(-4.85f, 1.03f, 2f), -5.9f, 0 + DegreeStep()/2, 180 -DegreeStep()/2, DegreeStep()); //Circle Position
+
         }
 
+        private double DegreeStep()
+        {
+            return 180f / (_sizeLevel*2);
+        }
 
         public override void StartGame()
         {
-            _gameController.StartLevel(0);
             SetGameConfiguration();
+            _gameController.StartLevel(0);
+            ClearGameArea();
+            bonusMultiplier = 1;
+            _points = 0;
+            success = 0;
+            GeneratePositionList();
             GenerateGame();
             _timeLeft = _maxTimeSeconds;
 
+            //Show Result _showTimeMillis /1000 Seconds
             StartCoroutine(ShowResult());
 
-            IncreasePointsIn(0);
-            scoreController.SetTime(_timeLeft);
-            StartCoroutine(CountDownTimeLeft()); //CountDown
+            StartScoreBoard();
+            
             Debug.Log("Empezando juego...");
 
+        }
+
+        private void ClearGameArea()
+        {
+            foreach (var gameObjectController in _generateObjectList)
+            {
+                Destroy(gameObjectController);
+            }
+            _generateObjectList.Clear();
+        }
+
+        private void StartScoreBoard()
+        {
+            IncreasePointsIn(0);
+            scoreController.SetTime(_timeLeft);
         }
 
         private void IncreasePointsIn(int points)
@@ -84,28 +103,47 @@ namespace Assets.Scripts.GamesControllers
 
         private void GenerateGame()
         {
-            for (int i = 0; i < _sizeLevel; i++)
+            Shuffle();
+            List<GameObject> selectedGameObjectToCreate = _concreteGameObjects.Take(_sizeLevel).ToList();
+            foreach (var concreteGameObject in selectedGameObjectToCreate)
             {
-                var concreteGameObject = _concreteGameObjects[i];
-                Instantiate(_GameObjectController, transform).Init(this, concreteGameObject, positionList[i]);
-                Instantiate(_GameObjectController, transform).Init(this, concreteGameObject, positionList[positionList.Count-i-1]);
+                _generateObjectList.Add(CreteGameObjectController(concreteGameObject, Utils.PopAt(positionList, 0)));
+                _generateObjectList.Add(CreteGameObjectController(concreteGameObject, Utils.PopAt(positionList, 0)));
             }
 
         }
 
+        private GameObjectController CreteGameObjectController(GameObject concreteGameObject, Vector3 position)
+        {
+            var vector3 = position  /*+ RandomVector()*/;
+            return Instantiate(_GameObjectController, transform).Init(this, concreteGameObject, vector3);
+        }
+
+        private static Vector3 RandomVector()
+        {
+            return new Vector3(RandomBetween1and_1(), RandomBetween1and_1(), RandomBetween1and_1());
+        }
+
+        private static float RandomBetween1and_1()
+        {
+            return Random.Range(-0.25f, 0.25f);
+        }
+
         IEnumerator ShowResult()
         {
-            GameObjectController[] gameObjectControllers = GetComponentsInChildren<GameObjectController>();
-            foreach (var gameObjectController in gameObjectControllers)
+            foreach (var gameObjectController in _generateObjectList)
             {
                 gameObjectController.ShowConcreteObject();
             }
             yield return new WaitForSeconds(_showTimeMillis / 1000f);
             FadeCamera();
-            foreach (var gameObjectController in gameObjectControllers)
+            foreach (var gameObjectController in _generateObjectList)
             {
                 gameObjectController.HideConcreteObject();
             }
+
+            countDown = CountDownTimeLeft();
+            StartCoroutine(countDown); //CountDown
         }
 
         private void SetGameConfiguration()
@@ -115,22 +153,22 @@ namespace Assets.Scripts.GamesControllers
             {
                 case EnumLevels.Easy:
                     _maxTimeSeconds = 60f;
-                    _showTimeMillis = 1500;
-                    _sizeLevel = 5;
+                    _showTimeMillis = 2000;
+                    _sizeLevel = 4;
                     break;
                 case EnumLevels.Medium:
                     _maxTimeSeconds = 50f;
-                    _showTimeMillis = 1350;
+                    _showTimeMillis = 1850;
                     _sizeLevel = 6;
                     break;
                 case EnumLevels.Hard:
                     _maxTimeSeconds = 40f;
-                    _showTimeMillis = 1250;
+                    _showTimeMillis = 1750;
                     _sizeLevel = 8;
                     break;
                 case EnumLevels.Extreme:
                     _maxTimeSeconds = 30f;
-                    _showTimeMillis = 1000;
+                    _showTimeMillis = 1500;
                     _sizeLevel = 10;
                     break;
             }
@@ -149,6 +187,7 @@ namespace Assets.Scripts.GamesControllers
 
         public override void FinishGame()
         {
+            StopCoroutine(countDown);
             _gameController.FinishLevel(0, new Punctuation(TimeStamp(), _points, difficulty), _minPoints<_points);
             Debug.Log("Finalizando juego...");
         }
@@ -160,27 +199,41 @@ namespace Assets.Scripts.GamesControllers
 
         public override IEnumerator ClickEvent(GameObjectController gameObjectController)
         {
-            if (Selected == null)
+            if (_selectedGameObject == null)
             {
-                Selected = gameObjectController;
+                _selectedGameObject = gameObjectController;
                 yield break;
             }
-            yield return new WaitForSeconds(0.7f);
-            if (Selected.Equals(gameObjectController))
+            yield return new WaitForSeconds(0.5f);
+            if (_selectedGameObject.SameConcreteObject(gameObjectController))
             {
-                Destroy(Selected);
-                Destroy(gameObjectController);
-                IncreasePointsIn(10* bonusMultiplier);
-                bonusMultiplier++;
-
-            }else{
-                Selected.HideConcreteObject();
-                gameObjectController.HideConcreteObject();
-                IncreasePointsIn(-2);
-                bonusMultiplier = 1;
+                _selectedGameObject.WinPosition();
+                gameObjectController.WinPosition();
+                SuccessPoints();
+                success++;
+                if (success == _sizeLevel)
+                    FinishGame();
             }
-            Selected = null;
+            else
+            {
+                _selectedGameObject.HideConcreteObject();
+                gameObjectController.HideConcreteObject();
+                FailurePoints();
+            }
+            _selectedGameObject = null;
 
+        }
+
+        private void FailurePoints()
+        {
+            IncreasePointsIn(-2);
+            bonusMultiplier = 1;
+        }
+
+        private void SuccessPoints()
+        {
+            IncreasePointsIn(10 * bonusMultiplier);
+            bonusMultiplier++;
         }
 
         private void FadeCamera()

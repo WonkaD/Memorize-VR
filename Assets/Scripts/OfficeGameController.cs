@@ -62,6 +62,7 @@ namespace Assets.Scripts
         {
             _gameLevels[levelIndex].LevelDoor.CloseDoorAndLock();
 
+
         }
         public void FinishLevel(int levelIndex, Punctuation punctuation, bool gameComplete)
         {
@@ -74,6 +75,7 @@ namespace Assets.Scripts
 
             level.RecordPunctuations.Add(punctuation);
             level.LevelDoor.OpenDoorAndUnlock();
+            Save();
         }
 
         private void UnlockNextLevel(int actualLevelIndex)
