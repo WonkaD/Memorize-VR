@@ -14,8 +14,6 @@ namespace Assets.Scripts.GamesControllers
         [SerializeField] private int _minPoints = 0;
         [SerializeField] private ScoreController scoreController;
         [SerializeField] private EnumLevels difficulty;
-        public float RightLimit;
-        public float UpLimit;
 
         private float _maxTimeSeconds;
         private long _showTimeMillis;
@@ -50,7 +48,7 @@ namespace Assets.Scripts.GamesControllers
         private void GeneratePositionList()
         {
             //positionList = Utils.PosicionInPlane(1f, -10f, -2f, 0.5f, 3.5f, 1.5f); //Plane Position
-            positionList = Utils.PosicionInCircle(new Vector3(-4.85f, 1.03f, 2f), -5.9f, 0 + DegreeStep()/2, 180 -DegreeStep()/2, DegreeStep()); //Circle Position
+            positionList = Utils.PosicionInCircle(new Vector3(-4.9f, 1.03f, 3.55f), -6f, 270 - DegreeStep()/2, 90 + DegreeStep()/2, DegreeStep()); //Circle Position
 
         }
 

@@ -9,7 +9,7 @@ namespace Assets.Scripts
         [SerializeField] private AudioClip _overAudio;
         [SerializeField] private AudioClip _selectAudio;
         [SerializeField] private Animator animator;
-        private bool _unlock = false;
+        [SerializeField] private bool _unlock = false;
         private bool _openDoor = false;
         private void OnEnable()
         {

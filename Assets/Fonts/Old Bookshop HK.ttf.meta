@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: c38494d50f7b57b45bc465447ba456dc
+timeCreated: 1487332542
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Old Bookshop
+  fontNames:
+  - Old Bookshop
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
