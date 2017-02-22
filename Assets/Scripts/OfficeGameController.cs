@@ -17,6 +17,11 @@ namespace Assets.Scripts
             if (!Load()) UnlockFirstLevel();
         }
 
+        public List<Level.Level> GetLevelsScoreRecords()
+        {
+            return _gameLevels;
+        }
+
         private void UnlockFirstLevel()
         {
             var firstDoor = _gameLevels.FirstOrDefault();

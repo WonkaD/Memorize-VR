@@ -61,6 +61,8 @@ public class VRTeleportItem : MonoBehaviour {
         gameObject.GetComponent<AudioSource>().PlayOneShot(_selectAudio);
         Player.transform.position = gameObject.transform.position + new Vector3(0, 2.3f, 0);
         Player.transform.rotation = gameObject.transform.rotation;
+        Player.transform.localRotation = gameObject.transform.localRotation;
+        MainCamera.transform.rotation = gameObject.transform.rotation;
         var vrCameraFade = MainCamera.GetComponent<VRCameraFade>();
         if (vrCameraFade == null)
             Debug.Log("VrCameraFade is NULL");

@@ -25,5 +25,6 @@ namespace Assets.Scripts
             this.points = points;
             this.difficulty = difficulty;
         }
+
     }
 }

@@ -26,11 +26,13 @@ namespace Assets.Scripts.GamesControllers
         public void ShowConcreteObject()
         {
             ReplaceGameObject(ConcreteObject);
+            DisableEvents();
         }
 
         public void HideConcreteObject()
         {
             ReplaceGameObject(_abstractObject);
+            EnableEvents();
         }
 
         private void Awake()
@@ -50,25 +52,32 @@ namespace Assets.Scripts.GamesControllers
 
         private void OnEnable()
         {
+            EnableEvents();
+        }
+
+        private void EnableEvents()
+        {
             _interactiveItem.OnOver += HandleOver;
             _interactiveItem.OnOut += HandleOut;
             _interactiveItem.OnClick += HandleClick;
         }
 
-
         private void OnDisable()
+        {
+            DisableEvents();
+            Destroy(gameObject);
+        }
+
+        private void DisableEvents()
         {
             _interactiveItem.OnOver -= HandleOver;
             _interactiveItem.OnOut -= HandleOut;
             _interactiveItem.OnClick -= HandleClick;
-            Destroy(gameObject);
         }
 
         public void WinPosition()
         {
-            _interactiveItem.OnOver -= HandleOver;
-            _interactiveItem.OnOut -= HandleOut;
-            _interactiveItem.OnClick -= HandleClick;
+            DisableEvents();
             GameObjectContainer.transform.Translate(Vector3.up * 2f);
         }
 
@@ -92,6 +101,7 @@ namespace Assets.Scripts.GamesControllers
         {
             //Show concrete object
             ReplaceGameObject(ConcreteObject); //TODO realizar alguna animación o algo, como transición.
+            DisableEvents();
             StartCoroutine(_gameController.ClickEvent(this));
         }
 
