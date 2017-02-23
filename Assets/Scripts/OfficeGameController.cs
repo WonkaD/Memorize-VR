@@ -10,11 +10,17 @@ namespace Assets.Scripts
         [SerializeField] private List<Level.Level> _gameLevels;
         private List<LevelStatus> _saveGame;
         public string PathFile = "saveGame.bin";
+        public ScoreBoard ScoreBoard;
 
         // Use this for initialization
-        void Start ()
+        private void Start()
         {
-            if (!Load()) UnlockFirstLevel();
+            if (!Load())
+            {
+                UnlockFirstLevel();
+                ScoreBoard.UpdateScoreBoard(null);
+            }
+            ScoreBoard.UpdateScoreBoard(_saveGame);
         }
 
         public List<Level.Level> GetLevelsScoreRecords()
@@ -30,13 +36,13 @@ namespace Assets.Scripts
 
         private void Save()
         {
-            List<LevelStatus> statusList = new List<LevelStatus>();
+            var statusList = new List<LevelStatus>();
             foreach (var gameLevel in _gameLevels)
-            {
                 statusList.Add(new LevelStatus(gameLevel));
-            }
             _saveGame = statusList;
-            BinaryFileManager.Save(PathFile,_saveGame);
+            BinaryFileManager.Save(PathFile, _saveGame);
+            //TODO  ScoreBoard
+            ScoreBoard.UpdateScoreBoard(_saveGame);
         }
 
         private bool Load()
@@ -45,10 +51,8 @@ namespace Assets.Scripts
             var savedLevels = _saveGame;
             if (savedLevels == null || _gameLevels == null) return false;
 
-            for (int i = 0; i < savedLevels.Count; i++)
-            {
+            for (var i = 0; i < savedLevels.Count; i++)
                 RestoreLevel(savedLevels[i], _gameLevels[i]);
-            }
             return true;
         }
 
@@ -66,20 +70,15 @@ namespace Assets.Scripts
         public void StartLevel(int levelIndex)
         {
             _gameLevels[levelIndex].LevelDoor.CloseDoorAndLock();
-
-
         }
+
         public void FinishLevel(int levelIndex, Punctuation punctuation, bool gameComplete)
         {
             var level = _gameLevels[levelIndex];
-
             if (gameComplete)
-            {
                 UnlockNextLevel(levelIndex);
-            }
-
-            level.RecordPunctuations.Add(punctuation);
-            level.LevelDoor.OpenDoorAndUnlock();
+            level.AddPunctuation(punctuation);
+            level.OpenDoorAndUnlock();
             Save();
         }
 
@@ -87,14 +86,12 @@ namespace Assets.Scripts
         {
             actualLevelIndex++;
             if (actualLevelIndex >= _gameLevels.Count) return;
-            _gameLevels[actualLevelIndex].LevelDoor.SetUnlock(true);
-
+            _gameLevels[actualLevelIndex].UnlockLevel();
         }
 
         // Update is called once per frame
-        void Update () {
-		
+        private void Update()
+        {
         }
-
     }
 }

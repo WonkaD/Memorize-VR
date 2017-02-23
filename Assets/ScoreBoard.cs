@@ -1,42 +1,47 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ScoreBoard : MonoBehaviour
 {
-    public Text ScoreText;
-    [SerializeField] private OfficeGameController _officeGameController;
-    public int[] Colums = {5,15,13,10,14};
-    public string Separator = " - ";
+    [SerializeField] private Text _scoreText;
+    [SerializeField] private readonly int[] _colums = {5, 15, 13, 10, 14};
+    [SerializeField] private readonly string _separator = " - ";
 
     // Use this for initialization
     private void Start()
     {
-        UpdateScoreBoard();
-    }
-
-    public void UpdateScoreBoard()
-    {
-        ScoreText.text = TableFormat(new[]{"Level","Stamp","Difficulty","Points","Date"});
-        ScoreText.text += "\n";
-        var level = 1;
-        foreach (var levelsScoreRecord in _officeGameController.GetLevelsScoreRecords())
-        {
-            foreach (var recordPunctuation in levelsScoreRecord.RecordPunctuations.OrderByDescending(x => x.date))
-                ScoreText.text += ToString(level, recordPunctuation);
-            level++;
-        }
     }
 
     // Update is called once per frame
     private void Update()
     {
-        UpdateScoreBoard();
     }
 
-    public string ToString(int level, Punctuation punctuation)
+    public void UpdateScoreBoard(List<LevelStatus> listLevelStatus)
+    {
+        Header();
+        if (listLevelStatus == null) _scoreText.text += "...";
+        var level = 1;
+        foreach (var levelStatus in listLevelStatus)
+        {
+            foreach (var punctuations in levelStatus.Punctuations.OrderByDescending(x => x.date))
+                _scoreText.text += ToString(level, punctuations);
+            level++;
+        }
+    }
+
+    private void Header()
+    {
+        _scoreText.text = TableFormat(new[] {"Level", "Stamp", "Difficulty", "Points", "Date"}) + "\n";
+    }
+
+
+    private string ToString(int level, Punctuation punctuation)
     {
         return TableFormat(new[]
         {
@@ -48,7 +53,7 @@ public class ScoreBoard : MonoBehaviour
         });
     }
 
-    private string TableFormat(string [] strings)
+    private string TableFormat(string[] strings)
     {
         CenterStrings(ref strings);
         return string.Format(FormatString(), strings);
@@ -56,33 +61,33 @@ public class ScoreBoard : MonoBehaviour
 
     private void CenterStrings(ref string[] strings)
     {
-        for (int i = 0; i < strings.Length; i++)
-        {
-            strings[i] = XSpace((Colums[i] - strings[i].Length) / 2) + strings[i];
-
-        }
+        for (var i = 0; i < strings.Length; i++)
+            strings[i] = X_Spaces(CalculateNumberOfSpaces(strings, i)) + strings[i];
     }
 
-    private string XSpace(int i)
+    private int CalculateNumberOfSpaces(string[] strings, int i)
+    {
+        return (_colums[i] - strings[i].Length) / 2;
+    }
+
+    private string X_Spaces(int i)
     {
         var spaceString = "";
-
-        for (var j = 0; j < i; j++)
-            spaceString += " ";
+        for (var j = 0; j < i; j++) spaceString += " ";
         return spaceString;
     }
 
     private string FormatString()
     {
-        string format ="";
+        var format = "";
         int i;
-        for (i = 0; i < Colums.Length-1; i++)
-            format += "{" + i + ",-" + Colums[i] + "}" + Separator;
+        for (i = 0; i < _colums.Length - 1; i++)
+            format += "{" + i + ",-" + _colums[i] + "}" + _separator;
 
-        return format + "{" + i + ",-" + Colums[i] + "}" + "\n";
+        return format + "{" + i + ",-" + _colums[i] + "}" + "\n";
     }
 
-    private string FomatDate(DateTime date)
+    private static string FomatDate(DateTime date)
     {
         var localTime = date.ToLocalTime();
         return localTime.ToString("dd/MM/yy");
