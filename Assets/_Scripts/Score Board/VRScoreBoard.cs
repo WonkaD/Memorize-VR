@@ -3,19 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using VRStandardAssets.Utils;
 
-public class VRScoreBoard : MonoBehaviour {
-
-    [SerializeField]
-    private VRInteractiveItem _interactiveItem;
-    [SerializeField]
-    private AudioClip _overAudio;
-    [SerializeField]
-    private AudioClip _selectAudio;
-    [SerializeField]
-    private Animator animator;
+public class VRScoreBoard : MonoBehaviour
+{
+    [SerializeField] private VRInteractiveItem _interactiveItem;
+    [SerializeField] private AudioClip _overAudio;
+    [SerializeField] private AudioClip _selectAudio;
+    [SerializeField] private Animator animator;
 
     public ScoreBoard ScoreBoard;
     public Light Light;
+
     private void OnEnable()
     {
         _interactiveItem.OnOver += HandleOver;
@@ -37,6 +34,11 @@ public class VRScoreBoard : MonoBehaviour {
     private void HandleOver()
     {
         //TODO reproducir sonido
+        PlayAudioOver();
+    }
+
+    private void PlayAudioOver()
+    {
         gameObject.GetComponent<AudioSource>().PlayOneShot(_overAudio);
     }
 
@@ -44,15 +46,23 @@ public class VRScoreBoard : MonoBehaviour {
     private void HandleOut()
     {
         //TODO pensar algo
-
     }
 
     //Handle the Click event
     private void HandleClick()
     {
-        //TODO teletransportar y enegrecer la pantalla
+        RunAnimation();
+        PlayAudioClick();
+    }
+
+    private void RunAnimation()
+    {
         animator.SetTrigger("Action");
         Light.enabled = !Light.enabled;
+    }
+
+    private void PlayAudioClick()
+    {
         gameObject.GetComponent<AudioSource>().PlayOneShot(_selectAudio);
     }
 

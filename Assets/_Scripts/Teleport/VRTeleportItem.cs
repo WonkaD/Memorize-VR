@@ -42,6 +42,11 @@ public class VRTeleportItem : MonoBehaviour {
     private void HandleOver()
     {
         //TODO reproducir sonido
+        PlayAudioOver();
+    }
+
+    private void PlayAudioOver()
+    {
         gameObject.GetComponent<AudioSource>().PlayOneShot(_overAudio);
     }
 
@@ -58,16 +63,31 @@ public class VRTeleportItem : MonoBehaviour {
     public void HandleClick()
     {
         //TODO teletransportar y enegrecer la pantalla
-        gameObject.GetComponent<AudioSource>().PlayOneShot(_selectAudio);
-        Player.transform.position = gameObject.transform.position + new Vector3(0, 2.3f, 0);
-        Player.transform.rotation = gameObject.transform.rotation;
-        Player.transform.localRotation = gameObject.transform.localRotation;
-        MainCamera.transform.rotation = gameObject.transform.rotation;
+        PlayAudioClick();
+        TeleportPlayer();
+        Fade();
+    }
+
+    private void Fade()
+    {
         var vrCameraFade = MainCamera.GetComponent<VRCameraFade>();
         if (vrCameraFade == null)
             Debug.Log("VrCameraFade is NULL");
         else
             vrCameraFade.FadeIn(1, false);
+    }
+
+    private void TeleportPlayer()
+    {
+        Player.transform.position = gameObject.transform.position + new Vector3(0, 2.3f, 0);
+        Player.transform.rotation = gameObject.transform.rotation;
+        Player.transform.localRotation = gameObject.transform.localRotation;
+        MainCamera.transform.rotation = gameObject.transform.rotation;
+    }
+
+    private void PlayAudioClick()
+    {
+        gameObject.GetComponent<AudioSource>().PlayOneShot(_selectAudio);
     }
 
 

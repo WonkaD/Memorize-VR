@@ -12,10 +12,10 @@ namespace Assets.Scripts
     {
         private static readonly Dictionary<EnumLevels, int> levels = new Dictionary<EnumLevels, int>
         {
-            { EnumLevels.Easy, 4},
+            {EnumLevels.Easy, 4},
             {EnumLevels.Medium, 6},
             {EnumLevels.Hard, 8},
-            { EnumLevels.Extreme, 10}
+            {EnumLevels.Extreme, 10}
         };
 
         public GameObject prefabGameObject;
@@ -29,7 +29,7 @@ namespace Assets.Scripts
 
         // Use this for initialization
         [UsedImplicitly]
-        void Awake ()
+        private void Awake()
         {
             int size;
             levels.TryGetValue(MenuController.Level, out size);
@@ -42,9 +42,9 @@ namespace Assets.Scripts
         }
 
         [UsedImplicitly]
-        void Start()
+        private void Start()
         {
-            for (int i = 0; i < numberOfGameObjects(); i++)
+            for (var i = 0; i < numberOfGameObjects(); i++)
             {
                 gameObjects.Add(Instantiate(prefabGameObject, nextSpawnPosition, Quaternion.identity));
                 CalculateNextPosition();
@@ -69,9 +69,9 @@ namespace Assets.Scripts
 
         private void GenerateRandomPairValues()
         {
-            for (var i = 0; i < numberOfGameObjects()/2; i++)
+            for (var i = 0; i < numberOfGameObjects() / 2; i++)
                 pairMaterialValues[i] = new PairMaterialValue(materials[i], i);
-            Array.Copy(pairMaterialValues, 0, pairMaterialValues, numberOfGameObjects()/2, numberOfGameObjects()/2);
+            Array.Copy(pairMaterialValues, 0, pairMaterialValues, numberOfGameObjects() / 2, numberOfGameObjects() / 2);
             pairMaterialValues = pairMaterialValues.OrderBy(a => Guid.NewGuid()).ToArray();
         }
 
@@ -91,11 +91,12 @@ namespace Assets.Scripts
         }
 
         // Update is called once per frame
-        void Update () {
+        private void Update()
+        {
             StartCoroutine(CheckSelectedItems());
         }
 
-        IEnumerator CheckSelectedItems()
+        private IEnumerator CheckSelectedItems()
         {
             var selectedItems = gameObjects.Where(item => GetScriptBoxInteractiveItem(item).IsSelected).ToList();
             if (selectedItems.Count < 2) yield break;
@@ -107,14 +108,18 @@ namespace Assets.Scripts
                 Debug.Log(points);
             }
             else
+            {
                 yield return new WaitForSeconds(0.5f);
+            }
             selectedItems.ForEach(a => GetScriptBoxInteractiveItem(a).IsSelected = false);
             if (gameObjects.Count == 0) SceneManager.LoadScene(0);
         }
 
         private bool sameHiddenValue(List<GameObject> selectedItems)
         {
-            return GetScriptBoxInteractiveItem(selectedItems[0]).hiddenValue.Equals(GetScriptBoxInteractiveItem(selectedItems[1]).hiddenValue);
+            return
+                GetScriptBoxInteractiveItem(selectedItems[0])
+                    .hiddenValue.Equals(GetScriptBoxInteractiveItem(selectedItems[1]).hiddenValue);
         }
 
         public class PairMaterialValue

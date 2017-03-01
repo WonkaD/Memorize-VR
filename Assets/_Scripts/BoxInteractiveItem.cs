@@ -1,30 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using VRStandardAssets.Utils;
 
-
-public class BoxInteractiveItem : MonoBehaviour {
-
-    [SerializeField]
-    private Material m_NormalMaterial;
-    [SerializeField]
-    private Material m_OverMaterial;
+public class BoxInteractiveItem : MonoBehaviour
+{
+    [SerializeField] private Material m_NormalMaterial;
+    [SerializeField] private Material m_OverMaterial;
     public Material m_ClickedMaterial;
-    [SerializeField]
-    private VRInteractiveItem interactiveItem;
-    [SerializeField]
-    private Renderer objectRenderer;
+    [SerializeField] private VRInteractiveItem interactiveItem;
+    [SerializeField] private Renderer objectRenderer;
 
     private bool isSelected;
     public int hiddenValue;
 
     public bool IsSelected
     {
-        get
-        {
-            return isSelected;
-        }
+        get { return isSelected; }
 
         set
         {
