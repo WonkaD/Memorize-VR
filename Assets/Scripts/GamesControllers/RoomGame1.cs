@@ -35,7 +35,6 @@ namespace Assets.Scripts.GamesControllers
 
         private void Awake()
         {
-            countDown = CountDownTimeLeft();
             MainCamera = GameObject.FindGameObjectWithTag("MainCamera");
 
 
@@ -76,7 +75,8 @@ namespace Assets.Scripts.GamesControllers
 
         private void ResetGameRoom()
         {
-            StopCoroutine(countDown);
+            if (countDown != null)
+                StopCoroutine(countDown);
             ClearGameArea();
             bonusMultiplier = 1;
             _points = 0;
@@ -84,6 +84,7 @@ namespace Assets.Scripts.GamesControllers
             GeneratePositionList();
             GenerateGame();
             _timeLeft = _maxTimeSeconds;
+            countDown = CountDownTimeLeft();
         }
 
         private void ClearGameArea()

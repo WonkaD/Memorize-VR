@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class ScoreBoard : MonoBehaviour
 {
     [SerializeField] private Text _scoreText;
-    [SerializeField] private readonly int[] _colums = {5, 15, 13, 10, 14};
+    [SerializeField] private int[] _colums = {5, 15, 13, 10, 14};
     [SerializeField] private readonly string _separator = " - ";
 
     // Use this for initialization
