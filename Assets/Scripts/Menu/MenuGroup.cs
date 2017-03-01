@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Menu;
 using UnityEngine;
 
 public class MenuGroup : MonoBehaviour
 {
-    private List<VrButton> Buttons;
+    private List<VRButton> Buttons;
 
 	// Use this for initialization
 	void Start () {

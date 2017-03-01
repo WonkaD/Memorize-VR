@@ -75,8 +75,10 @@ namespace Assets.Scripts
         public void FinishLevel(int levelIndex, Punctuation punctuation, bool gameComplete)
         {
             var level = _gameLevels[levelIndex];
-            if (gameComplete)
-                UnlockNextLevel(levelIndex);
+            level.OpenDoorAndUnlock();
+            if (!gameComplete) return;
+
+            UnlockNextLevel(levelIndex);
             level.AddPunctuation(punctuation);
             level.OpenDoorAndUnlock();
             Save();

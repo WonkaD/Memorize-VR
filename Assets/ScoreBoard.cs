@@ -25,7 +25,7 @@ public class ScoreBoard : MonoBehaviour
     public void UpdateScoreBoard(List<LevelStatus> listLevelStatus)
     {
         Header();
-        if (listLevelStatus == null) _scoreText.text += "...";
+        if (listLevelStatus == null) return;
         var level = 1;
         foreach (var levelStatus in listLevelStatus)
         {
@@ -37,7 +37,7 @@ public class ScoreBoard : MonoBehaviour
 
     private void Header()
     {
-        _scoreText.text = TableFormat(new[] {"Level", "Stamp", "Difficulty", "Points", "Date"}) + "\n";
+        _scoreText.text = TableFormat(new[] {"Difficulty", "Stamp", "Difficulty", "Points", "Date"}) + "\n";
     }
 
 

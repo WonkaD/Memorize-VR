@@ -14,7 +14,7 @@ namespace Assets.Scripts.GamesControllers
 		
         }
 
-        public override void StartGame()
+        public override void StartGame(EnumLevels difficulty)
         {
             throw new System.NotImplementedException();
         }
@@ -25,6 +25,11 @@ namespace Assets.Scripts.GamesControllers
         }
 
         public override IEnumerator ClickEvent(GameObjectController gameObjectController)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void AbortGame()
         {
             throw new System.NotImplementedException();
         }

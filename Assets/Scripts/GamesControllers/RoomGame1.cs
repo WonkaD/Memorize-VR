@@ -13,7 +13,7 @@ namespace Assets.Scripts.GamesControllers
         [SerializeField] private GameObjectController _GameObjectController;
         [SerializeField] private int _minPoints = 0;
         [SerializeField] private ScoreController scoreController;
-        [SerializeField] private EnumLevels difficulty;
+        [SerializeField] private EnumLevels _difficulty;
 
         private float _maxTimeSeconds;
         private long _showTimeMillis;
@@ -35,7 +35,9 @@ namespace Assets.Scripts.GamesControllers
 
         private void Awake()
         {
+            countDown = CountDownTimeLeft();
             MainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+
 
         }
 
@@ -48,7 +50,7 @@ namespace Assets.Scripts.GamesControllers
         private void GeneratePositionList()
         {
             //positionList = Utils.PosicionInPlane(1f, -10f, -2f, 0.5f, 3.5f, 1.5f); //Plane Position
-            positionList = Utils.PosicionInCircle(new Vector3(-4.9f, 1.03f, 3.55f), -6f, 270 - DegreeStep()/2, 90 + DegreeStep()/2, DegreeStep()); //Circle Position
+            positionList = Utils.PosicionInCircle(new Vector3(-4.9f, 1.03f, 3.55f), -6f, 270 - DegreeStep()/2, 89 + DegreeStep()/2, DegreeStep()); //Circle Position
 
         }
 
@@ -57,10 +59,24 @@ namespace Assets.Scripts.GamesControllers
             return 180f / (_sizeLevel*2);
         }
 
-        public override void StartGame()
+        public override void StartGame(EnumLevels difficulty)
         {
+            _difficulty = difficulty;
             SetGameConfiguration();
+            ResetGameRoom();
+
+            StartScoreBoard();
             _gameController.StartLevel(0);
+            //Show Result _showTimeMillis /1000 Seconds
+            StartCoroutine(ShowResult());
+
+            Debug.Log("Empezando juego...");
+
+        }
+
+        private void ResetGameRoom()
+        {
+            StopCoroutine(countDown);
             ClearGameArea();
             bonusMultiplier = 1;
             _points = 0;
@@ -68,23 +84,15 @@ namespace Assets.Scripts.GamesControllers
             GeneratePositionList();
             GenerateGame();
             _timeLeft = _maxTimeSeconds;
-
-            //Show Result _showTimeMillis /1000 Seconds
-            StartCoroutine(ShowResult());
-
-            StartScoreBoard();
-            
-            Debug.Log("Empezando juego...");
-
         }
 
         private void ClearGameArea()
         {
+            
             foreach (var gameObjectController in _generateObjectList)
-            {
                 Destroy(gameObjectController);
-            }
             _generateObjectList.Clear();
+
         }
 
         private void StartScoreBoard()
@@ -129,6 +137,8 @@ namespace Assets.Scripts.GamesControllers
 
         IEnumerator ShowResult()
         {
+            yield return new WaitForSeconds(2f);
+            FadeCamera();
             foreach (var gameObjectController in _generateObjectList)
             {
                 gameObjectController.ShowConcreteObject();
@@ -140,32 +150,32 @@ namespace Assets.Scripts.GamesControllers
                 gameObjectController.HideConcreteObject();
             }
 
-            countDown = CountDownTimeLeft();
+            
             StartCoroutine(countDown); //CountDown
         }
 
         private void SetGameConfiguration()
         {
 
-            switch (difficulty)
+            switch (_difficulty)
             {
                 case EnumLevels.Easy:
-                    _maxTimeSeconds = 60f;
-                    _showTimeMillis = 2000;
+                    _maxTimeSeconds = 10f;
+                    _showTimeMillis = 3000;
                     _sizeLevel = 4;
                     break;
                 case EnumLevels.Medium:
-                    _maxTimeSeconds = 50f;
-                    _showTimeMillis = 1850;
+                    _maxTimeSeconds = 9f;
+                    _showTimeMillis = 2500;
                     _sizeLevel = 6;
                     break;
                 case EnumLevels.Hard:
-                    _maxTimeSeconds = 40f;
-                    _showTimeMillis = 1750;
+                    _maxTimeSeconds = 7f;
+                    _showTimeMillis = 2000;
                     _sizeLevel = 8;
                     break;
                 case EnumLevels.Extreme:
-                    _maxTimeSeconds = 30f;
+                    _maxTimeSeconds = 5f;
                     _showTimeMillis = 1500;
                     _sizeLevel = 10;
                     break;
@@ -186,7 +196,7 @@ namespace Assets.Scripts.GamesControllers
         public override void FinishGame()
         {
             StopCoroutine(countDown);
-            _gameController.FinishLevel(0, new Punctuation(TimeStamp(), _points, difficulty), _minPoints<_points);
+            _gameController.FinishLevel(0, new Punctuation(TimeStamp(), _points, _difficulty), _minPoints<_points);
             Debug.Log("Finalizando juego...");
         }
 
@@ -202,7 +212,7 @@ namespace Assets.Scripts.GamesControllers
                 _selectedGameObject = gameObjectController;
                 yield break;
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.4f);
             if (_selectedGameObject.SameConcreteObject(gameObjectController))
             {
                 _selectedGameObject.WinPosition();
@@ -243,5 +253,11 @@ namespace Assets.Scripts.GamesControllers
                 vrCameraFade.FadeIn(1, false);
         }
 
+        public override void AbortGame()
+        {
+            StopCoroutine(countDown);
+            _gameController.FinishLevel(0, new Punctuation(), false);
+            Debug.Log("Abortando juego...");
+        }
     }
 }

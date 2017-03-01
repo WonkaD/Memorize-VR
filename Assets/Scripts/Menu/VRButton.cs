@@ -4,69 +4,60 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using VRStandardAssets.Utils;
 
-namespace Assets.Scripts.Menu
-{
-    [Serializable]
-    public class VrButtonEvent:UnityEvent<VrButton>{}
-
-
-    public class VrButton : MonoBehaviour
+    public class VRButton : MonoBehaviour
     { 
-        [SerializeField] private MenuController menu;
         public Color NormalColor;
         public Color OverColor;
         public Color ClickedColor;
-        [SerializeField] private VrButtonEvent _onClick;
-        [SerializeField] private VRInteractiveItem interactiveItem;
-        [SerializeField] private Image button;
+        [SerializeField] private UnityEvent _onClick;
+        [SerializeField] private VRInteractiveItem _interactiveItem;
+        [SerializeField] private Image _button;
 
         private void Awake()
         {
-            button.color = NormalColor;
-            BoxCollider boxCollider = gameObject.AddComponent<BoxCollider>();
+            _button.color = NormalColor;
             var buttonSize = gameObject.GetComponent<RectTransform>().sizeDelta;
-            boxCollider.size = new Vector3(buttonSize.x, buttonSize.y, 1);
+            gameObject.AddComponent<BoxCollider>().size = new Vector3(buttonSize.x, buttonSize.y, 1);
         }
 
 
         private void OnEnable()
         {
-            interactiveItem.OnOver += HandleOver;
-            interactiveItem.OnOut += HandleOut;
-            interactiveItem.OnClick += HandleClick;
+            _interactiveItem.OnOver += HandleOver;
+            _interactiveItem.OnOut += HandleOut;
+            _interactiveItem.OnClick += HandleClick;
         }
 
 
         private void OnDisable()
         {
-            interactiveItem.OnOver -= HandleOver;
-            interactiveItem.OnOut -= HandleOut;
-            interactiveItem.OnClick -= HandleClick;
+            _interactiveItem.OnOver -= HandleOver;
+            _interactiveItem.OnOut -= HandleOut;
+            _interactiveItem.OnClick -= HandleClick;
         }
 
 
         //Handle the Over event
         private void HandleOver()
         {
-            button.color = OverColor;
+            _button.color = OverColor;
         }
 
 
         //Handle the Out event
         private void HandleOut()
         {
-            button.color = NormalColor;
+            _button.color = NormalColor;
         }
 
 
         //Handle the Click event
         private void HandleClick()
         {
-            button.color = ClickedColor;
+            _button.color = ClickedColor;
             if (_onClick != null)
             { // Trigger our callbacks
-                _onClick.Invoke(this);
+                _onClick.Invoke();
             }
         }
     }
-}

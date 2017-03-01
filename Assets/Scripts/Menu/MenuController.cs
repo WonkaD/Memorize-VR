@@ -36,7 +36,7 @@ public class MenuController : MonoBehaviour
 
     public void StartGame()
     {
-        Debug.Log("Start game Level: " + Level + " and World: " + World);
+        Debug.Log("Start game Difficulty: " + Level + " and World: " + World);
         SceneManager.LoadScene(getSceneOfWorld());
     }
 

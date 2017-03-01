@@ -70,7 +70,7 @@ namespace Assets
 
         private void StartGame()
         {
-            _game.StartGame();
+            _game.StartGame(EnumLevels.Easy);
         }
 
         private void FadeCamera()

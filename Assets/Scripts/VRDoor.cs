@@ -71,7 +71,6 @@ namespace Assets.Scripts
         //Handle the Click event
         private void HandleClick()
         {
-            //TODO teletransportar y enegrecer la pantalla
             if (!_unlock) return;
             animator.SetTrigger("Action");
             _openDoor = !_openDoor;
