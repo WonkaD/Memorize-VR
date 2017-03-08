@@ -10,7 +10,7 @@ namespace Assets.Scripts.GamesControllers
         public abstract void FinishGame();
         public abstract void AbortGame();
 
-        public abstract IEnumerator ClickEvent(GameObjectController gameObjectController);
+        public abstract IEnumerator ClickEvent(GameObjectController selectedGameObject);
 
         void Start()
         {

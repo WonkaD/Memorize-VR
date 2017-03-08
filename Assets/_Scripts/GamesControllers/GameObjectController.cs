@@ -8,6 +8,8 @@ namespace Assets.Scripts.GamesControllers
     {
         public GameObject GameObjectContainer;
         private GameObject _visibleGameObject;
+        public AudioSource AudioSource;
+        public AudioClip ReplaceClip;
         [SerializeField] private GameObject _abstractObject;
         [HideInInspector] public GameObject ConcreteObject;
         [SerializeField] private VRInteractiveItem _interactiveItem;
@@ -45,6 +47,7 @@ namespace Assets.Scripts.GamesControllers
 
         private void ReplaceGameObject(GameObject newObject)
         {
+            
             Destroy(_visibleGameObject);
             _visibleGameObject = Instantiate(newObject, GameObjectContainer.transform);
             _visibleGameObject.transform.localPosition = new Vector3(0,0,0);
@@ -100,6 +103,7 @@ namespace Assets.Scripts.GamesControllers
         private void HandleClick()
         {
             //Show concrete object
+            AudioSource.PlayOneShot(ReplaceClip);
             ReplaceGameObject(ConcreteObject); //TODO realizar alguna animación o algo, como transición.
             DisableEvents();
             StartCoroutine(_gameController.ClickEvent(this));

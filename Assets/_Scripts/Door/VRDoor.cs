@@ -8,6 +8,8 @@ namespace Assets.Scripts
         [SerializeField] private VRInteractiveItem _interactiveItem;
         [SerializeField] private AudioClip _overAudio;
         [SerializeField] private AudioClip _selectAudio;
+        [SerializeField] private AudioClip doorAudioClip;
+
         [SerializeField] private Animator animator;
         [SerializeField] private bool _unlock = false;
         private bool _openDoor = false;
@@ -75,6 +77,7 @@ namespace Assets.Scripts
             animator.SetTrigger("Action");
             _openDoor = !_openDoor;
             gameObject.GetComponent<AudioSource>().PlayOneShot(_selectAudio);
+            gameObject.GetComponent<AudioSource>().PlayOneShot(doorAudioClip);
         }
 
         //Handle the DoubleClick event

@@ -24,7 +24,7 @@ namespace Assets.Scripts.GamesControllers
             throw new System.NotImplementedException();
         }
 
-        public override IEnumerator ClickEvent(GameObjectController gameObjectController)
+        public override IEnumerator ClickEvent(GameObjectController selectedGameObject)
         {
             throw new System.NotImplementedException();
         }

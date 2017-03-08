@@ -6,10 +6,10 @@ using VRStandardAssets.Utils;
 
 namespace Assets.Scripts.GamesControllers
 {
-    public class RoomGame1 : RoomGame {
-
+    public class RoomGame1 : RoomGame
+    {
         [SerializeField] private OfficeGameController _gameController;
-        [SerializeField] private List <GameObject> _concreteGameObjects;
+        [SerializeField] private List<GameObject> _concreteGameObjects;
         [SerializeField] private GameObjectController _GameObjectController;
         [SerializeField] private int _minPoints = 0;
         [SerializeField] private ScoreController scoreController;
@@ -25,7 +25,7 @@ namespace Assets.Scripts.GamesControllers
         private IEnumerator countDown;
         private List<GameObjectController> _generateObjectList = new List<GameObjectController>();
         private GameObjectController _selectedGameObject;
-        private List<Vector3> positionList  = new List<Vector3>();
+        private List<Vector3> positionList = new List<Vector3>();
         private int bonusMultiplier = 1;
 
         private GameObject MainCamera;
@@ -36,8 +36,6 @@ namespace Assets.Scripts.GamesControllers
         private void Awake()
         {
             MainCamera = GameObject.FindGameObjectWithTag("MainCamera");
-
-
         }
 
         private void Shuffle()
@@ -49,13 +47,13 @@ namespace Assets.Scripts.GamesControllers
         private void GeneratePositionList()
         {
             //positionList = Utils.PosicionInPlane(1f, -10f, -2f, 0.5f, 3.5f, 1.5f); //Plane Position
-            positionList = Utils.PosicionInCircle(new Vector3(-4.9f, 1.03f, 3.55f), -6f, 270 - DegreeStep()/2, 89 + DegreeStep()/2, DegreeStep()); //Circle Position
-
+            positionList = Utils.PosicionInCircle(new Vector3(-4.9f, 1.03f, 3.55f), -6f, 270 - DegreeStep() / 2,
+                89 + DegreeStep() / 2, DegreeStep()); //Circle Position
         }
 
         private double DegreeStep()
         {
-            return 180f / (_sizeLevel*2);
+            return 180f / (_sizeLevel * 2);
         }
 
         public override void StartGame(EnumLevels difficulty)
@@ -70,7 +68,6 @@ namespace Assets.Scripts.GamesControllers
             StartCoroutine(ShowResult());
 
             Debug.Log("Empezando juego...");
-
         }
 
         private void ResetGameRoom()
@@ -89,11 +86,9 @@ namespace Assets.Scripts.GamesControllers
 
         private void ClearGameArea()
         {
-            
             foreach (var gameObjectController in _generateObjectList)
                 Destroy(gameObjectController);
             _generateObjectList.Clear();
-
         }
 
         private void StartScoreBoard()
@@ -111,18 +106,17 @@ namespace Assets.Scripts.GamesControllers
         private void GenerateGame()
         {
             Shuffle();
-            List<GameObject> selectedGameObjectToCreate = _concreteGameObjects.Take(_sizeLevel).ToList();
+            var selectedGameObjectToCreate = _concreteGameObjects.Take(_sizeLevel).ToList();
             foreach (var concreteGameObject in selectedGameObjectToCreate)
             {
-                _generateObjectList.Add(CreteGameObjectController(concreteGameObject, Utils.PopAt(positionList, 0)));
-                _generateObjectList.Add(CreteGameObjectController(concreteGameObject, Utils.PopAt(positionList, 0)));
+                _generateObjectList.Add(CreateGameObjectController(concreteGameObject, Utils.PopAt(positionList, 0)));
+                _generateObjectList.Add(CreateGameObjectController(concreteGameObject, Utils.PopAt(positionList, 0)));
             }
-
         }
 
-        private GameObjectController CreteGameObjectController(GameObject concreteGameObject, Vector3 position)
+        private GameObjectController CreateGameObjectController(GameObject concreteGameObject, Vector3 position)
         {
-            var vector3 = position  /*+ RandomVector()*/;
+            var vector3 = position /*+ RandomVector()*/;
             return Instantiate(_GameObjectController, transform).Init(this, concreteGameObject, vector3);
         }
 
@@ -136,28 +130,23 @@ namespace Assets.Scripts.GamesControllers
             return Random.Range(-0.25f, 0.25f);
         }
 
-        IEnumerator ShowResult()
+        private IEnumerator ShowResult()
         {
             yield return new WaitForSeconds(2f);
             FadeCamera();
             foreach (var gameObjectController in _generateObjectList)
-            {
                 gameObjectController.ShowConcreteObject();
-            }
             yield return new WaitForSeconds(_showTimeMillis / 1000f);
             FadeCamera();
             foreach (var gameObjectController in _generateObjectList)
-            {
                 gameObjectController.HideConcreteObject();
-            }
 
-            
+
             StartCoroutine(countDown); //CountDown
         }
 
         private void SetGameConfiguration()
         {
-
             switch (_difficulty)
             {
                 case EnumLevels.Easy:
@@ -183,7 +172,7 @@ namespace Assets.Scripts.GamesControllers
             }
         }
 
-        IEnumerator CountDownTimeLeft()
+        private IEnumerator CountDownTimeLeft()
         {
             while (_timeLeft > 0)
             {
@@ -197,7 +186,7 @@ namespace Assets.Scripts.GamesControllers
         public override void FinishGame()
         {
             StopCoroutine(countDown);
-            _gameController.FinishLevel(0, new Punctuation(TimeStamp(), _points, _difficulty), _minPoints<_points);
+            _gameController.FinishLevel(0, new Punctuation(TimeStamp(), _points, _difficulty), _minPoints < _points);
             Debug.Log("Finalizando juego...");
         }
 
@@ -206,31 +195,51 @@ namespace Assets.Scripts.GamesControllers
             return _maxTimeSeconds - _timeLeft;
         }
 
-        public override IEnumerator ClickEvent(GameObjectController gameObjectController)
+        public override IEnumerator ClickEvent(GameObjectController selectedGameObject)
         {
             if (_selectedGameObject == null)
             {
-                _selectedGameObject = gameObjectController;
+                _selectedGameObject = selectedGameObject;
                 yield break;
             }
             yield return new WaitForSeconds(0.4f);
-            if (_selectedGameObject.SameConcreteObject(gameObjectController))
-            {
-                _selectedGameObject.WinPosition();
-                gameObjectController.WinPosition();
-                SuccessPoints();
-                success++;
-                if (success == _sizeLevel)
-                    FinishGame();
-            }
+            if (_selectedGameObject.SameConcreteObject(selectedGameObject))
+                SameGameObjects(selectedGameObject);
             else
-            {
-                _selectedGameObject.HideConcreteObject();
-                gameObjectController.HideConcreteObject();
-                FailurePoints();
-            }
+                NotSameGameObjects(selectedGameObject);
             _selectedGameObject = null;
+        }
 
+        private void NotSameGameObjects(GameObjectController selectedGameObject)
+        {
+            FailAnimation(selectedGameObject);
+            FailurePoints();
+        }
+
+        private void SameGameObjects(GameObjectController selectedGameObject)
+        {
+            WinAnimation(selectedGameObject);
+            SuccessPoints();
+            CheckFinishGame();
+        }
+
+        private void FailAnimation(GameObjectController selectedGameObject)
+        {
+            _selectedGameObject.HideConcreteObject();
+            selectedGameObject.HideConcreteObject();
+        }
+
+        private void CheckFinishGame()
+        {
+            success++;
+            if (success == _sizeLevel)
+                FinishGame();
+        }
+
+        private void WinAnimation(GameObjectController selectedGameObject)
+        {
+            _selectedGameObject.WinPosition();
+            selectedGameObject.WinPosition();
         }
 
         private void FailurePoints()
