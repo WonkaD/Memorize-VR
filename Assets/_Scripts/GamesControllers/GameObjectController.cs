@@ -47,10 +47,10 @@ namespace Assets.Scripts.GamesControllers
 
         private void ReplaceGameObject(GameObject newObject)
         {
-            
             Destroy(_visibleGameObject);
             _visibleGameObject = Instantiate(newObject, GameObjectContainer.transform);
             _visibleGameObject.transform.localPosition = new Vector3(0,0,0);
+            _particle.Stop();
         }
 
         private void OnEnable()
