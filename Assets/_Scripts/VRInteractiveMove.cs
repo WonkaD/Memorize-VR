@@ -6,10 +6,6 @@ namespace Assets.Scripts
     public class VRInteractiveMove : MonoBehaviour {
 
         [SerializeField]
-        private Material normalMaterial;
-        [SerializeField]
-        private Material overMaterial;
-        [SerializeField]
         private VRInteractiveItem interactiveItem;
         [SerializeField]
         private Renderer objectRenderer;
@@ -22,7 +18,6 @@ namespace Assets.Scripts
 
         private void Awake()
         {
-            objectRenderer.material = normalMaterial;
             firstTransform = objectTransform;
         }
 
@@ -49,7 +44,6 @@ namespace Assets.Scripts
         private void HandleOver()
         {
             Debug.Log("Show over state");
-            objectRenderer.material = overMaterial;
 
         }
 
@@ -58,7 +52,6 @@ namespace Assets.Scripts
         private void HandleOut()
         {
             Debug.Log("Show out state");
-            objectRenderer.material = normalMaterial;
 
         }
 
@@ -67,6 +60,7 @@ namespace Assets.Scripts
         private void HandleDown()
         {
             Debug.Log("Show click state");
+            
             var newPosition = new Vector3(pointerTransform.position.x, pointerTransform.position.y, objectTransform.position.z);
             objectTransform.position = newPosition;
         }

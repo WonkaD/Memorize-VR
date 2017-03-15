@@ -13,11 +13,19 @@ public class MenuController : MonoBehaviour
         {EnumWorld.OpenWorld, "OpenWorld"}, {EnumWorld.Room, "Room"}, { EnumWorld.Office, "Office"}
     };
 
+
     void Awake()
     {
         DontDestroyOnLoad(transform.gameObject);
-        
     }
+
+    IEnumerator BackGroundLoadOffice()
+    {
+        AsyncOperation async = SceneManager.LoadSceneAsync("Office");
+        yield return async;
+        Debug.Log("Loading complete");
+    }
+
     // Use this for initialization
     void Start () {
         World = EnumWorld.Room;
@@ -36,8 +44,9 @@ public class MenuController : MonoBehaviour
 
     public void StartGame()
     {
-        Debug.Log("Start game Difficulty: " + Level + " and World: " + World);
-        SceneManager.LoadScene(getSceneOfWorld());
+        Debug.Log("Starting game...");
+        StartCoroutine(BackGroundLoadOffice());
+        //SceneManager.LoadScene(getSceneOfWorld());
     }
 
     private static string getSceneOfWorld()

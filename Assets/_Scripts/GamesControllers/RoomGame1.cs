@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 using VRStandardAssets.Utils;
 
@@ -13,8 +14,11 @@ namespace Assets.Scripts.GamesControllers
         [SerializeField] private GameObjectController _GameObjectController;
         [SerializeField] private int _minPoints = 0;
         [SerializeField] private ScoreController scoreController;
-        [SerializeField] private EnumLevels _difficulty;
+        [SerializeField] private AudioClip _winAudioClip;
+        [SerializeField] private AudioClip _failAudioClip;
 
+
+        private EnumLevels _difficulty;
         private float _maxTimeSeconds;
         private long _showTimeMillis;
         private int _sizeLevel;
@@ -29,13 +33,16 @@ namespace Assets.Scripts.GamesControllers
         private int bonusMultiplier = 1;
 
         private GameObject MainCamera;
+        private AudioSource AudioSource;
 
         // Update is called once per frame
 
 
         private void Awake()
         {
+            countDown = CountDownTimeLeft();
             MainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+            AudioSource = GetComponent<AudioSource>();
         }
 
         private void Shuffle()
@@ -150,22 +157,22 @@ namespace Assets.Scripts.GamesControllers
             switch (_difficulty)
             {
                 case EnumLevels.Easy:
-                    _maxTimeSeconds = 10f;
+                    _maxTimeSeconds = 15f;
                     _showTimeMillis = 3000;
                     _sizeLevel = 4;
                     break;
                 case EnumLevels.Medium:
-                    _maxTimeSeconds = 9f;
+                    _maxTimeSeconds = 13f;
                     _showTimeMillis = 2500;
                     _sizeLevel = 6;
                     break;
                 case EnumLevels.Hard:
-                    _maxTimeSeconds = 7f;
+                    _maxTimeSeconds = 10f;
                     _showTimeMillis = 2000;
                     _sizeLevel = 8;
                     break;
                 case EnumLevels.Extreme:
-                    _maxTimeSeconds = 5f;
+                    _maxTimeSeconds = 8f;
                     _showTimeMillis = 1500;
                     _sizeLevel = 10;
                     break;
@@ -176,17 +183,20 @@ namespace Assets.Scripts.GamesControllers
         {
             while (_timeLeft > 0)
             {
-                yield return new WaitForSeconds(0.001f);
-                _timeLeft -= 0.001f;
+
+                yield return new WaitForSeconds(0.001f*Time.time);
+                _timeLeft -= 0.001f * Time.time;
                 scoreController.SetTime(_timeLeft);
             }
-            FinishGame();
+            AbortGame();
         }
 
         public override void FinishGame()
         {
             StopCoroutine(countDown);
+            AudioSource.PlayOneShot(_winAudioClip);
             _gameController.FinishLevel(0, new Punctuation(TimeStamp(), _points, _difficulty), _minPoints < _points);
+            
             Debug.Log("Finalizando juego...");
         }
 
@@ -266,6 +276,7 @@ namespace Assets.Scripts.GamesControllers
         public override void AbortGame()
         {
             StopCoroutine(countDown);
+            AudioSource.PlayOneShot(_failAudioClip);
             _gameController.FinishLevel(0, new Punctuation(), false);
             Debug.Log("Abortando juego...");
         }

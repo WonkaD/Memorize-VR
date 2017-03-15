@@ -37,7 +37,7 @@ public class ScoreBoard : MonoBehaviour
 
     private void Header()
     {
-        _scoreText.text = TableFormat(new[] {"Difficulty", "Stamp", "Difficulty", "Points", "Date"}) + "\n";
+        _scoreText.text = TableFormat(new[] {"Room", "Stamp", "Difficulty", "Points", "Date"}) + "\n";
     }
 
 

@@ -34,7 +34,7 @@ public class ControlPanelGame : MonoBehaviour
 
     public void FinishGame()
     {
-        _roomGame.FinishGame();
+        _roomGame.AbortGame();
     }
 
     public void LevelUp()
