@@ -3,38 +3,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
-    public static EnumWorld World;
-    public static EnumLevels Level;
-    public static readonly Dictionary<EnumWorld, string> worlds = new Dictionary<EnumWorld, string>
+    private static EnumWorld _world;
+    public  static EnumLevels Level;
+    [SerializeField] private Image reticleImageLoad;
+    private  static readonly Dictionary<EnumWorld, string> worlds = new Dictionary<EnumWorld, string>
     {
         {EnumWorld.OpenWorld, "OpenWorld"}, {EnumWorld.Room, "Room"}, { EnumWorld.Office, "Office"}
     };
-
+    
 
     void Awake()
     {
-        DontDestroyOnLoad(transform.gameObject);
+        DontDestroyOnLoad(this);
     }
 
-    IEnumerator BackGroundLoadOffice()
+    IEnumerator BackGroundLoadOffice(String scene)
     {
-        AsyncOperation async = SceneManager.LoadSceneAsync("Office");
-        yield return async;
-        Debug.Log("Loading complete");
+        AsyncOperation async = SceneManager.LoadSceneAsync(scene);
+        float progress = 0.0f;
+        while (!async.isDone)
+        {
+            Debug.Log(async.progress);
+            reticleImageLoad.fillAmount = (async.progress > progress) ? async.progress: progress;
+            progress += 0.01f;
+            yield return new WaitForSecondsRealtime(0.1f);
+        }
+        
+
     }
 
     // Use this for initialization
     void Start () {
-        World = EnumWorld.Room;
+        _world = EnumWorld.Office;
         Level = EnumLevels.Medium;
     }
 
     public void SetWorld(int world)
     {
-        World = Enum.IsDefined(typeof(EnumWorld), world) ? (EnumWorld)world : EnumWorld.Room;
+        _world = Enum.IsDefined(typeof(EnumWorld), world) ? (EnumWorld)world : EnumWorld.Office;
     }
 
     public void SetLevel (int level)
@@ -45,14 +55,18 @@ public class MenuController : MonoBehaviour
     public void StartGame()
     {
         Debug.Log("Starting game...");
-        StartCoroutine(BackGroundLoadOffice());
-        //SceneManager.LoadScene(getSceneOfWorld());
+        StartCoroutine(BackGroundLoadOffice(getSceneOfWorld()));
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 
     private static string getSceneOfWorld()
     {
         String scene = "Lobby";
-        worlds.TryGetValue(World, out scene);
+        worlds.TryGetValue(_world, out scene);
         return scene;
     }
 }
