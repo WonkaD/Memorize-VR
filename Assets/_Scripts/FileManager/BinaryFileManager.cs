@@ -26,6 +26,12 @@ namespace Assets.Scripts
             }
         }
 
+        public static void Remove(string pathFile)
+        {
+            if (File.Exists(pathFile))
+                File.Delete(pathFile);
+        }
+
         #region Private Methods
 
         private static byte[] FileToByteArray(string pathFile)

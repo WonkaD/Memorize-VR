@@ -32,9 +32,9 @@ namespace Assets.Scripts
         private void Awake()
         {
             int size;
-            levels.TryGetValue(MenuController.Level, out size);
+            //levels.TryGetValue(MenuController.Level, out size);
 
-            pairMaterialValues = new PairMaterialValue[size];
+            pairMaterialValues = new PairMaterialValue[2];
             gameObjects = new List<GameObject>();
             points = 0;
             GenerateRandomPairValues();
