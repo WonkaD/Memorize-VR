@@ -10,9 +10,8 @@ public class MenuController : MonoBehaviour
 {
 
     [SerializeField] private Image reticleImageLoad;
-    [SerializeField] private ConfirmationDialog confirmDialog;
-    [SerializeField] private Canvas menuGameObject;
-    [SerializeField] private Canvas menuDuplicationGameObject;
+    [SerializeField] private Canvas menuCanvas;
+    [SerializeField] private Canvas menuConfirmationCanvas;
 
     public string PathFile = "saveGame.bin";
     void Awake()
@@ -42,26 +41,15 @@ public class MenuController : MonoBehaviour
 
     public void NewGame()
     {
-        StartCoroutine(WaitForCloseMenu());
-        
-    }
-
-    private IEnumerator WaitForCloseMenu()
-    {
         ShowConfirmationMenu();
-        yield return new WaitWhile(() =>confirmDialog.GetVisible());
-        if (confirmDialog.GetConfirmation())
-            RemoveAndStartGame();
-        else
-            ShowMenuGame();
+
     }
 
     private void ShowConfirmationMenu()
     {
 
-        menuGameObject.enabled =false;
-        menuDuplicationGameObject.enabled =false;
-        confirmDialog.SetVisible(true);
+        menuCanvas.enabled =false;
+        menuConfirmationCanvas.enabled =true;
     }
 
     public void RemoveAndStartGame()
@@ -72,9 +60,8 @@ public class MenuController : MonoBehaviour
 
     public void ShowMenuGame()
     {
-        menuGameObject.enabled = true;
-        menuDuplicationGameObject.enabled = true;
-        confirmDialog.SetVisible(false);
+        menuCanvas.enabled = true;
+        menuConfirmationCanvas.enabled = false;
     }
 
     public void ExitGame()
