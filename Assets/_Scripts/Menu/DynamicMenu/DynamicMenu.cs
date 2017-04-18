@@ -10,6 +10,7 @@ public class DynamicMenu : MonoBehaviour
     private void Start()
     {
         gameObject.SetActive(false);
+        _cameraPlayer = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     // Update is called once per frame

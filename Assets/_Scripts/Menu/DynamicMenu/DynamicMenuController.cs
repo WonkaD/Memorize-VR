@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class DynamicMenuController : MonoBehaviour {
-
+public class DynamicMenuController : MonoBehaviour
+{
+    [SerializeField] private PlayerController _playerController;
 	// Use this for initialization
 	void Start () {
 		
@@ -18,5 +20,10 @@ public class DynamicMenuController : MonoBehaviour {
     public void ExitGame()
     {
         SceneManager.LoadScene("Lobby");
+    }
+
+    public void ChangeGameMode()
+    {
+        _playerController.ChangeGameMode();
     }
 }
