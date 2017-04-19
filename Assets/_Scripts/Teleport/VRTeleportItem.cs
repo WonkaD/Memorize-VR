@@ -15,7 +15,7 @@ public class VRTeleportItem : MonoBehaviour {
 
     private void Start()
     {
-        Player = GameObject.FindGameObjectWithTag("PlayerCapsule");
+        Player = GameObject.FindGameObjectWithTag("Player");
         MainCamera = GameObject.FindGameObjectWithTag("MainCamera");
     }
 

@@ -7,8 +7,7 @@ namespace Assets
     public class PlayerController : MonoBehaviour
     {
         private bool _isVRPresent;
-        private bool _isControllerPresent;
-        private bool _isKeyBoardPresent;
+        private bool _isKeyBoardOrControllerPresent;
 
         [SerializeField] private FirstPersonController _firstPersonController;
         [SerializeField] private OVRPlayerController _ovrPlayerController;
@@ -20,8 +19,7 @@ namespace Assets
         // Use this for initialization
         void Start ()
         {
-            _isKeyBoardPresent = Application.platform != RuntimePlatform.Android;
-            _isControllerPresent = Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0].Contains("Controller");
+            _isKeyBoardOrControllerPresent = Application.platform != RuntimePlatform.Android || Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0].Contains("Controller");
             _isVRPresent = VRDevice.isPresent;
             UseBestPlayerMode();
         }
