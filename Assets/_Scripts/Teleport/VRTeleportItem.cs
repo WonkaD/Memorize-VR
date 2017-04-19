@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets;
 using UnityEngine;
 using VRStandardAssets.Utils;
 
@@ -9,14 +10,14 @@ public class VRTeleportItem : MonoBehaviour {
     [SerializeField] private AudioClip _overAudio;
     [SerializeField] private AudioClip _selectAudio;
 
-    private GameObject Player;
-    private GameObject MainCamera;
+    private Player _player;
+    
 
 
     private void Start()
     {
-        Player = GameObject.FindGameObjectWithTag("Player");
-        MainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        
     }
 
 
@@ -70,7 +71,7 @@ public class VRTeleportItem : MonoBehaviour {
 
     private void Fade()
     {
-        var vrCameraFade = MainCamera.GetComponent<VRCameraFade>();
+        var vrCameraFade = _player._vrCameraFade;
         if (vrCameraFade == null)
             Debug.Log("VrCameraFade is NULL");
         else
@@ -79,10 +80,9 @@ public class VRTeleportItem : MonoBehaviour {
 
     private void TeleportPlayer()
     {
-        Player.transform.position = gameObject.transform.position + new Vector3(0, 2.3f, 0);
-        Player.transform.rotation = gameObject.transform.rotation;
-        Player.transform.localRotation = gameObject.transform.localRotation;
-        MainCamera.transform.rotation = gameObject.transform.rotation;
+        _player.transform.position = gameObject.transform.position + new Vector3(0, 2.3f, 0);
+        _player.transform.rotation = gameObject.transform.rotation;
+        _player.transform.localRotation = gameObject.transform.localRotation;
     }
 
     private void PlayAudioClick()

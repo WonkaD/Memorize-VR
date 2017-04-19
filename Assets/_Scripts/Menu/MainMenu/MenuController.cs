@@ -1,38 +1,38 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
+using Assets;
 using Assets.Scripts;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
-
-    [SerializeField] private Image reticleImageLoad;
+    private Player _player;
     [SerializeField] private Canvas menuCanvas;
+    [SerializeField] private Canvas menuDuplicateCanvas;
     [SerializeField] private Canvas menuConfirmationCanvas;
 
     public string PathFile = "saveGame.bin";
-    void Awake()
-    {
 
+    private void Start()
+    {
+        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
-    IEnumerator BackGroundLoadOffice(String scene)
+    private IEnumerator BackGroundLoadOffice(string scene)
     {
-        AsyncOperation async = SceneManager.LoadSceneAsync(scene);
-        float progress = 0.0f;
+        var async = SceneManager.LoadSceneAsync(scene);
+        var progress = 0.0f;
         while (!async.isDone)
         {
             Debug.Log(async.progress);
-            reticleImageLoad.fillAmount = (async.progress > progress) ? async.progress: progress;
+            _player.SetReticleLoadPercentage(async.progress > progress ? async.progress : progress);
             progress += 0.01f;
             yield return new WaitForSecondsRealtime(0.1f);
         }
-        
 
+        _player.SetReticleLoadPercentage(0);
     }
+
     public void StartGame()
     {
         Debug.Log("Starting game...");
@@ -42,14 +42,13 @@ public class MenuController : MonoBehaviour
     public void NewGame()
     {
         ShowConfirmationMenu();
-
     }
 
     private void ShowConfirmationMenu()
     {
-
-        menuCanvas.enabled =false;
-        menuConfirmationCanvas.enabled =true;
+        menuCanvas.enabled = false;
+        menuDuplicateCanvas.enabled = false;
+        menuConfirmationCanvas.enabled = true;
     }
 
     public void RemoveAndStartGame()
@@ -61,6 +60,7 @@ public class MenuController : MonoBehaviour
     public void ShowMenuGame()
     {
         menuCanvas.enabled = true;
+        menuDuplicateCanvas.enabled = true;
         menuConfirmationCanvas.enabled = false;
     }
 
@@ -68,5 +68,4 @@ public class MenuController : MonoBehaviour
     {
         Application.Quit();
     }
-
 }

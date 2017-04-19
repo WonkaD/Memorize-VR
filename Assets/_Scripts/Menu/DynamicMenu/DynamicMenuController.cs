@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class DynamicMenuController : MonoBehaviour
 {
-    [SerializeField] private PlayerController _playerController;
+    [SerializeField] private Player _player;
 	// Use this for initialization
 	void Start () {
 		
@@ -24,6 +24,6 @@ public class DynamicMenuController : MonoBehaviour
 
     public void ChangeGameMode()
     {
-        _playerController.ChangeGameMode();
+        _player.ChangeGameMode();
     }
 }

@@ -1,0 +1,44 @@
+﻿using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.VR;
+using UnityStandardAssets.Characters.FirstPerson;
+using VRStandardAssets.Utils;
+
+namespace Assets
+{
+    public class Player : MonoBehaviour
+    {
+        private bool _isVRPresent;
+        private bool _isKeyBoardOrControllerPresent;
+
+        public FirstPersonController _firstPersonController;
+        public OVRCameraRig _ovrCameraRig;
+        public VRCameraFade _vrCameraFade;
+        public Image _reticleImageLoad;
+
+        // Use this for initialization
+        void Start ()
+        {
+            _isKeyBoardOrControllerPresent = Application.platform != RuntimePlatform.Android || Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0].Contains("Controller");
+            _isVRPresent = VRDevice.isPresent;
+            UseBestPlayerMode();
+        }
+
+        private void UseBestPlayerMode()
+        {
+            _ovrCameraRig.enabled = _isVRPresent;
+            _firstPersonController.enabled = !_isVRPresent;
+        }
+
+        public void SetReticleLoadPercentage(float percentage)
+        {
+            _reticleImageLoad.fillAmount = percentage;
+        }
+
+        public void ChangeGameMode()
+        {
+
+        }
+
+    }
+}
