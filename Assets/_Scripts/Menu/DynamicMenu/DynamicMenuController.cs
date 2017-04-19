@@ -6,10 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class DynamicMenuController : MonoBehaviour
 {
-    [SerializeField] private Player _player;
+    [SerializeField] private GameObject controller;
 	// Use this for initialization
-	void Start () {
-		
+	void Start ()
+	{
+	    var player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+	    controller.GetComponent<ToggleButton>().setEnable(player._firstPersonController.enabled);
+	    if (!player._isVRPresent) controller.SetActive(false);
 	}
 	
 	// Update is called once per frame
@@ -22,8 +25,4 @@ public class DynamicMenuController : MonoBehaviour
         SceneManager.LoadScene("Lobby");
     }
 
-    public void ChangeGameMode()
-    {
-        _player.ChangeGameMode();
-    }
 }

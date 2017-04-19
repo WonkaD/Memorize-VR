@@ -5,11 +5,11 @@ using UnityEngine.UI;
 using VRStandardAssets.Utils;
 
     public class VRButton : MonoBehaviour
-    { 
-        public Color NormalColor;
-        public Color OverColor;
-        public Color ClickedColor;
-        [SerializeField] private UnityEvent _onClick;
+    {
+        [SerializeField] private Color NormalColor;
+        [SerializeField] private Color OverColor;
+        [SerializeField] private Color ClickedColor;
+        public UnityEvent _onClick;
         [SerializeField] private VRInteractiveItem _interactiveItem;
         [SerializeField] private Image _button;
 

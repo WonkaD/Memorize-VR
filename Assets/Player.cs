@@ -8,8 +8,8 @@ namespace Assets
 {
     public class Player : MonoBehaviour
     {
-        private bool _isVRPresent;
-        private bool _isKeyBoardOrControllerPresent;
+        public bool _isVRPresent { get; protected set; }
+        public bool _isKeyBoardOrControllerPresent { get; protected set; }
 
         public FirstPersonController _firstPersonController;
         public OVRCameraRig _ovrCameraRig;
@@ -35,9 +35,14 @@ namespace Assets
             _reticleImageLoad.fillAmount = percentage;
         }
 
-        public void ChangeGameMode()
+        public void DisableController()
         {
+            if (_isVRPresent) _firstPersonController.enabled = false;
+        }
 
+        public void EnableController()
+        {
+            _firstPersonController.enabled = true;
         }
 
     }
