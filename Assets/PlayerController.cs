@@ -1,48 +1,61 @@
 ﻿using UnityEngine;
+using UnityEngine.VR;
 using UnityStandardAssets.Characters.FirstPerson;
 
 namespace Assets
 {
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] private bool VRMode;
-        
+        private bool _isVRPresent;
+        private bool _isControllerPresent;
+        private bool _isKeyBoardPresent;
+
         [SerializeField] private FirstPersonController _firstPersonController;
+        [SerializeField] private OVRPlayerController _ovrPlayerController;
         [SerializeField] private CharacterController _characterController;
+
         [SerializeField] private OVRCameraRig _ovrCameraRig;
 
 
         // Use this for initialization
         void Start ()
         {
-            ChangePlayerMode();
+            _isKeyBoardPresent = Application.platform != RuntimePlatform.Android;
+            _isControllerPresent = Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0].Contains("Controller");
+            _isVRPresent = VRDevice.isPresent;
+            UseBestPlayerMode();
         }
 
-        private void ChangePlayerMode()
+        private void UseBestPlayerMode()
         {
-            if (VRMode) ActivateVRMode();
-            else DisableVRMode();
+            _ovrCameraRig.enabled = _isVRPresent;
+            _firstPersonController.enabled = !_isVRPresent;
         }
 
         public void ChangeGameMode()
         {
-            VRMode = !VRMode;
-            ChangePlayerMode();
 
         }
 
+
+
         private void ActivateVRMode()
         {
-            _firstPersonController.enabled = false;
-            _characterController.enabled = false;
-            _ovrCameraRig.enabled = true;
+            if (VRDevice.isPresent)
+            {
+                _firstPersonController.enabled = false;
+                _ovrCameraRig.enabled = true;
+            }
+            
         }
 
         private void DisableVRMode()
         {
-            _firstPersonController.enabled = true;
-            _characterController.enabled = true;
-            _ovrCameraRig.enabled = false;
+            if (Input.mousePresent)
+            {
+                _firstPersonController.enabled = true;
+                _ovrCameraRig.enabled = false;
+            }
         }
 
         // Update is called once per frame
