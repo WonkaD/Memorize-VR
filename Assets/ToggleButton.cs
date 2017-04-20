@@ -30,13 +30,13 @@ namespace Assets
         {
             if (_enabled)
             {
-                _vrButton._onClick = _enableEvent;
                 _buttonText.text = _enableString;
+                _vrButton._onClick = _enableEvent;
             }
             else
             {
-                _vrButton._onClick = _disableEvent;
                 _buttonText.text = _disableString;
+                _vrButton._onClick = _disableEvent;
             }
         }
 
