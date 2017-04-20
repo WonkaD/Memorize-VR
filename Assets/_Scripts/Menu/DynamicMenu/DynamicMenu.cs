@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 public class DynamicMenu : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class DynamicMenu : MonoBehaviour
     {
         gameObject.SetActive(false);
         _originalScale = transform.localScale;
-        _cameraPlayer = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        _cameraPlayer = GameObject.FindGameObjectsWithTag("MainCamera").First(x=>x.name.Equals("CenterEyeAnchor")).transform;
     }
 
     // Update is called once per frame

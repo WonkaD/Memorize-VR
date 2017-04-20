@@ -27,6 +27,7 @@ namespace Assets
         private void UseBestPlayerMode()
         {
             _ovrCameraRig.enabled = _isVRPresent;
+            _ovrCameraRig.usePerEyeCameras = _isVRPresent;
             _firstPersonController.enabled = !_isVRPresent;
         }
 
