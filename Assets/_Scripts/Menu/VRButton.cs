@@ -51,13 +51,13 @@ public class VRButton : MonoBehaviour
     {
         if (enable)
         {
-            //OnDisable();
+            OnEnable();
             ActivateButton();
         }
 
         else
         {
-            //OnDisable();
+            OnDisable();
             DeactivateteButton();
         }
     }
