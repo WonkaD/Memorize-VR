@@ -162,18 +162,18 @@ namespace Assets.Scripts.GamesControllers
                     _sizeLevel = 4;
                     break;
                 case EnumLevels.Medium:
-                    _maxTimeSeconds = 13f;
-                    _showTimeMillis = 2500;
+                    _maxTimeSeconds = 16f;
+                    _showTimeMillis = 4500;
                     _sizeLevel = 6;
                     break;
                 case EnumLevels.Hard:
-                    _maxTimeSeconds = 10f;
-                    _showTimeMillis = 2000;
+                    _maxTimeSeconds = 17f;
+                    _showTimeMillis = 5500;
                     _sizeLevel = 8;
                     break;
                 case EnumLevels.Extreme:
-                    _maxTimeSeconds = 8f;
-                    _showTimeMillis = 1500;
+                    _maxTimeSeconds = 18f;
+                    _showTimeMillis = 6500;
                     _sizeLevel = 10;
                     break;
             }
