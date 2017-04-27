@@ -32,7 +32,7 @@ namespace Assets.Scripts.GamesControllers
         private List<Vector3> positionList = new List<Vector3>();
         private int bonusMultiplier = 1;
 
-        private GameObject MainCamera;
+        private Player player;
         private AudioSource AudioSource;
 
         // Update is called once per frame
@@ -41,7 +41,7 @@ namespace Assets.Scripts.GamesControllers
         private void Awake()
         {
             countDown = CountDownTimeLeft();
-            MainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
             AudioSource = GetComponent<AudioSource>();
         }
 
@@ -162,18 +162,18 @@ namespace Assets.Scripts.GamesControllers
                     _sizeLevel = 4;
                     break;
                 case EnumLevels.Medium:
-                    _maxTimeSeconds = 16f;
-                    _showTimeMillis = 4500;
+                    _maxTimeSeconds = 17f;
+                    _showTimeMillis = 3500;
                     _sizeLevel = 6;
                     break;
                 case EnumLevels.Hard:
-                    _maxTimeSeconds = 17f;
-                    _showTimeMillis = 5500;
+                    _maxTimeSeconds = 21f;
+                    _showTimeMillis = 4500;
                     _sizeLevel = 8;
                     break;
                 case EnumLevels.Extreme:
-                    _maxTimeSeconds = 18f;
-                    _showTimeMillis = 6500;
+                    _maxTimeSeconds = 25f;
+                    _showTimeMillis = 5500;
                     _sizeLevel = 10;
                     break;
             }
@@ -266,7 +266,7 @@ namespace Assets.Scripts.GamesControllers
 
         private void FadeCamera()
         {
-            var vrCameraFade = MainCamera.GetComponent<VRCameraFade>();
+            var vrCameraFade = player._vrCameraFade;
             if (vrCameraFade == null)
                 Debug.Log("VrCameraFade is NULL");
             else
