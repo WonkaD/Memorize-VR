@@ -8,8 +8,9 @@ using UnityEngine.UI;
 
 public class ScoreBoard : MonoBehaviour
 {
+    [SerializeField] private Text _topScoreText;
     [SerializeField] private Text _scoreText;
-    [SerializeField] private int[] _colums = {5, 15, 13, 10, 14};
+    [SerializeField] private int[] _colums = { 10, 15, 14, 10, 14};
     [SerializeField] private readonly string _separator = " - ";
 
     // Use this for initialization
@@ -25,19 +26,39 @@ public class ScoreBoard : MonoBehaviour
     public void UpdateScoreBoard(List<LevelStatus> listLevelStatus)
     {
         Header();
-        if (listLevelStatus == null) return;
+        if (listLevelStatus == null && listLevelStatus.Count < 1 ) return;
+        /* Cuando hay mas niveles
         var level = 1;
         foreach (var levelStatus in listLevelStatus)
-        {
-            foreach (var punctuations in levelStatus.Punctuations.OrderByDescending(x => x.date))
-                _scoreText.text += ToString(level, punctuations);
-            level++;
-        }
+        {*/
+        listLevelStatus[0].Punctuations.Sort();
+        TopScores(listLevelStatus);
+
+        var punctuations = listLevelStatus[0].Punctuations;
+        if (punctuations.Count > 3)
+            foreach (var punctuation in punctuations.GetRange(3, punctuations.Count-3))
+                _scoreText.text += ToString(1, punctuation);
+            //level++;
+       // }
+    }
+
+    private void TopScores(List<LevelStatus> listLevelStatus)
+    {
+        List<Punctuation> punctuations = listLevelStatus[0].Punctuations;
+        foreach (var punctuation in punctuations.GetRange(0, VerifyCountMoreThan3(punctuations)))
+            _topScoreText.text += ToString(1, punctuation);
+
+    }
+
+    private static int VerifyCountMoreThan3(List<Punctuation> punctuations)
+    {
+        return punctuations.Count > 3 ? 3 : punctuations.Count;
     }
 
     private void Header()
     {
-        _scoreText.text = TableFormat(new[] {"Room", "Stamp", "Difficulty", "Points", "Date"}) + "\n";
+        _topScoreText.text = TableFormat(new[] {"Room", "Stamp", "Difficulty", "Points", "Date"}) + "\n";
+        _scoreText.text = "";
     }
 
 
