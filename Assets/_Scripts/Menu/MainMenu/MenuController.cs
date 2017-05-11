@@ -18,7 +18,7 @@ public class MenuController : MonoBehaviour
         _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
-    private IEnumerator BackGroundLoadOffice(string scene)
+    private IEnumerator BackGroundLoadOffice(int scene)
     {
         var async = SceneManager.LoadSceneAsync(scene);
         var progress = 0.0f;
@@ -36,7 +36,7 @@ public class MenuController : MonoBehaviour
     public void StartGame()
     {
         Debug.Log("Starting game...");
-        StartCoroutine(BackGroundLoadOffice("Office"));
+        StartCoroutine(BackGroundLoadOffice(1));
     }
 
     public void NewGame()
