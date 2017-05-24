@@ -10,7 +10,7 @@ namespace Assets.Scripts.GamesControllers
         [SerializeField] private OfficeGameController _gameController;
         [SerializeField] private List<GameObject> _concreteGameObjects;
         [SerializeField] private GameObjectController _GameObjectController;
-        [SerializeField] private readonly int _minPoints = 0;
+        
         [SerializeField] private ScoreController scoreController;
         [SerializeField] private AudioClip _winAudioClip;
         [SerializeField] private AudioClip _failAudioClip;
@@ -22,6 +22,7 @@ namespace Assets.Scripts.GamesControllers
         private long _showTimeMillis;
         private int _sizeLevel;
 
+        private readonly int _minPoints = 30;
         private int _points;
         private int bonusMultiplier = 1;
 
