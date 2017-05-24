@@ -46,5 +46,14 @@ namespace Assets
             _firstPersonController.enabled = true;
         }
 
+        public void FadeCamera()
+        {
+            
+            if (_vrCameraFade == null)
+                Debug.Log("VrCameraFade is NULL");
+            else
+                _vrCameraFade.FadeIn(1, false);
+        }
+
     }
 }

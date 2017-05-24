@@ -1,9 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using UnityEngine;
-using VRStandardAssets.Utils;
 
 namespace Assets.Scripts.GamesControllers
 {
@@ -12,35 +10,40 @@ namespace Assets.Scripts.GamesControllers
         [SerializeField] private OfficeGameController _gameController;
         [SerializeField] private List<GameObject> _concreteGameObjects;
         [SerializeField] private GameObjectController _GameObjectController;
-        [SerializeField] private int _minPoints = 0;
+        [SerializeField] private readonly int _minPoints = 0;
         [SerializeField] private ScoreController scoreController;
         [SerializeField] private AudioClip _winAudioClip;
         [SerializeField] private AudioClip _failAudioClip;
 
 
         private EnumLevels _difficulty;
+
         private float _maxTimeSeconds;
         private long _showTimeMillis;
         private int _sizeLevel;
+
         private int _points;
+        private int bonusMultiplier = 1;
 
         private int success;
         private float _timeLeft;
         private IEnumerator countDown;
-        private List<GameObjectController> _generateObjectList = new List<GameObjectController>();
+        private readonly List<GameObjectController> _generateObjectList = new List<GameObjectController>();
         private GameObjectController _selectedGameObject;
         private List<Vector3> positionList = new List<Vector3>();
-        private int bonusMultiplier = 1;
+        
 
         private Player player;
         private AudioSource AudioSource;
-        static readonly Dictionary<EnumLevels, DifficutySetting> DIFFICULTY_SETTINGS = new Dictionary<EnumLevels, DifficutySetting>
-        {
-            {EnumLevels.Easy, new DifficutySetting(15f, 3000, 4)},
-            {EnumLevels.Medium, new DifficutySetting(18f, 3500, 6)},
-            {EnumLevels.Hard, new DifficutySetting(23f, 4500, 8)},
-            {EnumLevels.Extreme, new DifficutySetting(30f, 6500, 10)}
-        };
+
+        private static readonly Dictionary<EnumLevels, DifficutySetting> DIFFICULTY_SETTINGS =
+            new Dictionary<EnumLevels, DifficutySetting>
+            {
+                {EnumLevels.Easy, new DifficutySetting(15f, 3000, 4)},
+                {EnumLevels.Medium, new DifficutySetting(18f, 3500, 6)},
+                {EnumLevels.Hard, new DifficutySetting(23f, 4500, 8)},
+                {EnumLevels.Extreme, new DifficutySetting(30f, 6500, 10)}
+            };
 
         // Update is called once per frame
 
@@ -79,7 +82,7 @@ namespace Assets.Scripts.GamesControllers
             StartScoreBoard();
             _gameController.StartLevel(0);
             //Show Result _showTimeMillis /1000 Seconds
-            StartCoroutine(ShowResult());
+            StartCoroutine(ShowSoluttion());
 
             Debug.Log("Empezando juego...");
         }
@@ -144,14 +147,14 @@ namespace Assets.Scripts.GamesControllers
             return Random.Range(-0.25f, 0.25f);
         }
 
-        private IEnumerator ShowResult()
+        private IEnumerator ShowSoluttion()
         {
             yield return new WaitForSeconds(2f);
-            FadeCamera();
+            player.FadeCamera();
             foreach (var gameObjectController in _generateObjectList)
                 gameObjectController.ShowConcreteObject();
             yield return new WaitForSeconds(_showTimeMillis / 1000f);
-            FadeCamera();
+            player.FadeCamera();
             foreach (var gameObjectController in _generateObjectList)
                 gameObjectController.HideConcreteObject();
 
@@ -161,7 +164,7 @@ namespace Assets.Scripts.GamesControllers
 
         private DifficutySetting GetDifficultySettings()
         {
-            DifficutySetting difficuty = new DifficutySetting();
+            var difficuty = new DifficutySetting();
             DIFFICULTY_SETTINGS.TryGetValue(_difficulty, out difficuty);
             return difficuty;
         }
@@ -177,8 +180,7 @@ namespace Assets.Scripts.GamesControllers
         {
             while (_timeLeft > 0)
             {
-
-                yield return new WaitForSeconds(0.001f*Time.time);
+                yield return new WaitForSeconds(0.001f * Time.time);
                 _timeLeft -= 0.001f * Time.time;
                 scoreController.SetTime(_timeLeft);
             }
@@ -190,7 +192,7 @@ namespace Assets.Scripts.GamesControllers
             StopCoroutine(countDown);
             AudioSource.PlayOneShot(_winAudioClip);
             _gameController.FinishLevel(0, new Punctuation(TimeStamp(), _points, _difficulty), _minPoints < _points);
-            FadeCamera();
+            player.FadeCamera();
             ClearGameArea();
             Debug.Log("Finalizando juego...");
         }
@@ -259,21 +261,12 @@ namespace Assets.Scripts.GamesControllers
             bonusMultiplier++;
         }
 
-        private void FadeCamera()
-        {
-            var vrCameraFade = player._vrCameraFade;
-            if (vrCameraFade == null)
-                Debug.Log("VrCameraFade is NULL");
-            else
-                vrCameraFade.FadeIn(1, false);
-        }
-
         public override void AbortGame()
         {
             StopCoroutine(countDown);
             AudioSource.PlayOneShot(_failAudioClip);
             _gameController.FinishLevel(0, new Punctuation(), false);
-            FadeCamera();
+            player.FadeCamera();
             ClearGameArea();
             Debug.Log("Abortando juego...");
         }
@@ -293,9 +286,9 @@ namespace Assets.Scripts.GamesControllers
 
             public DifficutySetting(float maxTimeSeconds, long showTimeMillis, int sizeLevel)
             {
-                this.MaxTimeSeconds = maxTimeSeconds;
-                this.ShowTimeMillis = showTimeMillis;
-                this.SizeLevel = sizeLevel;
+                MaxTimeSeconds = maxTimeSeconds;
+                ShowTimeMillis = showTimeMillis;
+                SizeLevel = sizeLevel;
             }
         }
     }

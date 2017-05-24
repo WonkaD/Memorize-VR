@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class ControlPanelGame : MonoBehaviour
 {
-
     [SerializeField] private RoomGame _roomGame;
     [SerializeField] private Text _levelText;
     private EnumLevels _difficulty = EnumLevels.Easy;
@@ -43,10 +42,11 @@ public class ControlPanelGame : MonoBehaviour
             ? (EnumLevels) ((int) _difficulty + 1)
             : 0;
     }
+
     public void LevelDown()
     {
-        Difficulty = Enum.IsDefined(typeof(EnumLevels), (int)_difficulty - 1)
-            ? (EnumLevels)((int)_difficulty - 1)
+        Difficulty = Enum.IsDefined(typeof(EnumLevels), (int) _difficulty - 1)
+            ? (EnumLevels) ((int) _difficulty - 1)
             : LastEnum();
     }
 
