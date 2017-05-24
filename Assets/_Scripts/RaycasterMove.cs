@@ -72,11 +72,11 @@ public class RaycasterMove : MonoBehaviour {
     {
 
         FixedJoint joint = jointCollision.gameObject.AddComponent<FixedJoint>();
-        var rb = GetRigidbody();
+        var rigidBody = GetRigidbody();
         jointCollision.gameObject.transform.position = gameObject.transform.position;
-        if (rb == null) return;
+        if (rigidBody == null) return;
 
-        joint.connectedBody = rb;
+        joint.connectedBody = rigidBody;
     }
 
     private void ActivateGravity()

@@ -34,6 +34,13 @@ namespace Assets.Scripts.GamesControllers
 
         private Player player;
         private AudioSource AudioSource;
+        static readonly Dictionary<EnumLevels, DifficutySetting> DIFFICULTY_SETTINGS = new Dictionary<EnumLevels, DifficutySetting>
+        {
+            {EnumLevels.Easy, new DifficutySetting(15f, 3000, 4)},
+            {EnumLevels.Medium, new DifficutySetting(18f, 3500, 6)},
+            {EnumLevels.Hard, new DifficutySetting(23f, 4500, 8)},
+            {EnumLevels.Extreme, new DifficutySetting(30f, 6500, 10)}
+        };
 
         // Update is called once per frame
 
@@ -66,7 +73,7 @@ namespace Assets.Scripts.GamesControllers
         public override void StartGame(EnumLevels difficulty)
         {
             _difficulty = difficulty;
-            SetGameConfiguration();
+            SetDifficultySettings(GetDifficultySettings());
             ResetGameRoom();
 
             StartScoreBoard();
@@ -152,31 +159,18 @@ namespace Assets.Scripts.GamesControllers
             StartCoroutine(countDown); //CountDown
         }
 
-        private void SetGameConfiguration()
+        private DifficutySetting GetDifficultySettings()
         {
-            switch (_difficulty)
-            {
-                case EnumLevels.Easy:
-                    _maxTimeSeconds = 15f;
-                    _showTimeMillis = 3000;
-                    _sizeLevel = 4;
-                    break;
-                case EnumLevels.Medium:
-                    _maxTimeSeconds = 17f;
-                    _showTimeMillis = 3500;
-                    _sizeLevel = 6;
-                    break;
-                case EnumLevels.Hard:
-                    _maxTimeSeconds = 21f;
-                    _showTimeMillis = 4500;
-                    _sizeLevel = 8;
-                    break;
-                case EnumLevels.Extreme:
-                    _maxTimeSeconds = 25f;
-                    _showTimeMillis = 5500;
-                    _sizeLevel = 10;
-                    break;
-            }
+            DifficutySetting difficuty = new DifficutySetting();
+            DIFFICULTY_SETTINGS.TryGetValue(_difficulty, out difficuty);
+            return difficuty;
+        }
+
+        private void SetDifficultySettings(DifficutySetting difficuty)
+        {
+            _maxTimeSeconds = difficuty.MaxTimeSeconds;
+            _showTimeMillis = difficuty.ShowTimeMillis;
+            _sizeLevel = difficuty.SizeLevel;
         }
 
         private IEnumerator CountDownTimeLeft()
@@ -196,7 +190,8 @@ namespace Assets.Scripts.GamesControllers
             StopCoroutine(countDown);
             AudioSource.PlayOneShot(_winAudioClip);
             _gameController.FinishLevel(0, new Punctuation(TimeStamp(), _points, _difficulty), _minPoints < _points);
-            
+            FadeCamera();
+            ClearGameArea();
             Debug.Log("Finalizando juego...");
         }
 
@@ -278,7 +273,30 @@ namespace Assets.Scripts.GamesControllers
             StopCoroutine(countDown);
             AudioSource.PlayOneShot(_failAudioClip);
             _gameController.FinishLevel(0, new Punctuation(), false);
+            FadeCamera();
+            ClearGameArea();
             Debug.Log("Abortando juego...");
+        }
+
+        private class DifficutySetting
+        {
+            public readonly float MaxTimeSeconds;
+            public readonly long ShowTimeMillis;
+            public readonly int SizeLevel;
+
+            public DifficutySetting()
+            {
+                MaxTimeSeconds = 15f;
+                ShowTimeMillis = 3000;
+                SizeLevel = 4;
+            }
+
+            public DifficutySetting(float maxTimeSeconds, long showTimeMillis, int sizeLevel)
+            {
+                this.MaxTimeSeconds = maxTimeSeconds;
+                this.ShowTimeMillis = showTimeMillis;
+                this.SizeLevel = sizeLevel;
+            }
         }
     }
 }
