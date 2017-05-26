@@ -11,6 +11,7 @@ namespace Assets.Scripts
         [SerializeField] private AudioClip doorAudioClip;
 
         [SerializeField] private Animator animator;
+        [SerializeField] private GameObject _block;
         [SerializeField] private bool _unlock = false;
         private bool _openDoor = false;
         private void OnEnable()
@@ -49,6 +50,7 @@ namespace Assets.Scripts
         public void SetUnlock(bool status)
         {
             _unlock = status;
+            _block.SetActive(!status);
         }
 
         public bool GetUnlock()

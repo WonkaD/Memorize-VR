@@ -109,7 +109,7 @@ namespace Assets.Scripts.GamesControllers
             StartCoroutine(_gameController.ClickEvent(this));
         }
 
-        public bool SameConcreteObject(GameObjectController other)
+        public bool IsSameConcreteObject(GameObjectController other)
         {
             return ConcreteObject.Equals(other.ConcreteObject);
         }

@@ -4,6 +4,7 @@ using System.Threading;
 using UnityEngine;
 using Random = System.Random;
 
+
 namespace Assets.Scripts
 {
     public class Utils
@@ -104,6 +105,16 @@ namespace Assets.Scripts
             var r = list[index];
             list.RemoveAt(index);
             return r;
+        }
+
+        public static Vector3 RandomVector()
+        {
+            return new Vector3(RandomBetween1and_1(), RandomBetween1and_1(), RandomBetween1and_1());
+        }
+
+        public static float RandomBetween1and_1()
+        {
+            return UnityEngine.Random.Range(-0.25f, 0.25f);
         }
     }
 }

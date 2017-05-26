@@ -10,29 +10,23 @@ namespace Assets.Scripts.GamesControllers
         [SerializeField] private OfficeGameController _gameController;
         [SerializeField] private List<GameObject> _concreteGameObjects;
         [SerializeField] private GameObjectController _GameObjectController;
-        
+
         [SerializeField] private ScoreController scoreController;
         [SerializeField] private AudioClip _winAudioClip;
         [SerializeField] private AudioClip _failAudioClip;
+        [SerializeField] private ControlPanelGame _controlPanelGame;
 
 
         private EnumLevels _difficulty;
+        private DifficutySetting _difficutySetting;
+        private Punctuation _punctuation;
 
-        private float _maxTimeSeconds;
-        private long _showTimeMillis;
-        private int _sizeLevel;
-
-        private readonly int _minPoints = 30;
-        private int _points;
-        private int bonusMultiplier = 1;
-
-        private int success;
+        private int _success;
         private float _timeLeft;
-        private IEnumerator countDown;
+        private IEnumerator _countDown;
         private readonly List<GameObjectController> _generateObjectList = new List<GameObjectController>();
         private GameObjectController _selectedGameObject;
         private List<Vector3> positionList = new List<Vector3>();
-        
 
         private Player player;
         private AudioSource AudioSource;
@@ -46,14 +40,83 @@ namespace Assets.Scripts.GamesControllers
                 {EnumLevels.Extreme, new DifficutySetting(30f, 6500, 10)}
             };
 
-        // Update is called once per frame
-
 
         private void Awake()
         {
-            countDown = CountDownTimeLeft();
+            _countDown = CountDownTimeLeft();
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
             AudioSource = GetComponent<AudioSource>();
+        }
+
+        #region GameController
+
+        public override void StartGame(EnumLevels difficulty)
+        {
+            _difficulty = difficulty;
+            _difficutySetting = GetDifficultySettings();
+            ResetGameRoom();
+            _gameController.StartLevel(0);
+            StartCoroutine(ShowSoluttion());
+        }
+
+        public override void FinishGame()
+        {
+            StopCoroutine(_countDown);
+            AudioSource.PlayOneShot(_winAudioClip);
+            _gameController.FinishLevel(0, new Scripts.Punctuation(TimeStamp(), _punctuation.Points, _difficulty),
+                _punctuation.IsSuccessful());
+            ClearGameArea();
+        }
+
+        public override void AbortGame()
+        {
+            StopCoroutine(_countDown);
+            AudioSource.PlayOneShot(_failAudioClip);
+            _gameController.FinishLevel(0, new Scripts.Punctuation(), false);
+            ClearGameArea();
+        }
+
+        #endregion
+
+
+        private void ResetGameRoom()
+        {
+            if (_countDown != null) StopCoroutine(_countDown);
+            ClearGameArea();
+            _punctuation = new Punctuation();
+            _success = 0;
+            GeneratePositionList();
+            GenerateGame();
+            _timeLeft = _difficutySetting.MaxTimeSeconds;
+            _countDown = CountDownTimeLeft();
+            ResetScoreBoard();
+        }
+
+        private void ClearGameArea()
+        {
+            player.FadeCamera();
+            foreach (var gameObjectController in _generateObjectList)
+                Destroy(gameObjectController);
+            _generateObjectList.Clear();
+            _controlPanelGame.OpenPanel();
+        }
+
+
+        private void ResetScoreBoard()
+        {
+            scoreController.SetScore(0);
+            scoreController.SetTime(_timeLeft);
+        }
+
+        private void GenerateGame()
+        {
+            Shuffle();
+            var selectedGameObjectToCreate = _concreteGameObjects.Take(_difficutySetting.SizeLevel).ToList();
+            foreach (var concreteGameObject in selectedGameObjectToCreate)
+            {
+                _generateObjectList.Add(CreateGameObjectController(concreteGameObject, Utils.PopAt(positionList, 0)));
+                _generateObjectList.Add(CreateGameObjectController(concreteGameObject, Utils.PopAt(positionList, 0)));
+            }
         }
 
         private void Shuffle()
@@ -71,65 +134,7 @@ namespace Assets.Scripts.GamesControllers
 
         private double DegreeStep()
         {
-            return 180f / (_sizeLevel * 2);
-        }
-
-        public override void StartGame(EnumLevels difficulty)
-        {
-            _difficulty = difficulty;
-            SetDifficultySettings(GetDifficultySettings());
-            ResetGameRoom();
-
-            StartScoreBoard();
-            _gameController.StartLevel(0);
-            //Show Result _showTimeMillis /1000 Seconds
-            StartCoroutine(ShowSoluttion());
-
-            Debug.Log("Empezando juego...");
-        }
-
-        private void ResetGameRoom()
-        {
-            if (countDown != null)
-                StopCoroutine(countDown);
-            ClearGameArea();
-            bonusMultiplier = 1;
-            _points = 0;
-            success = 0;
-            GeneratePositionList();
-            GenerateGame();
-            _timeLeft = _maxTimeSeconds;
-            countDown = CountDownTimeLeft();
-        }
-
-        private void ClearGameArea()
-        {
-            foreach (var gameObjectController in _generateObjectList)
-                Destroy(gameObjectController);
-            _generateObjectList.Clear();
-        }
-
-        private void StartScoreBoard()
-        {
-            IncreasePointsIn(0);
-            scoreController.SetTime(_timeLeft);
-        }
-
-        private void IncreasePointsIn(int points)
-        {
-            _points += points;
-            scoreController.SetScore(_points);
-        }
-
-        private void GenerateGame()
-        {
-            Shuffle();
-            var selectedGameObjectToCreate = _concreteGameObjects.Take(_sizeLevel).ToList();
-            foreach (var concreteGameObject in selectedGameObjectToCreate)
-            {
-                _generateObjectList.Add(CreateGameObjectController(concreteGameObject, Utils.PopAt(positionList, 0)));
-                _generateObjectList.Add(CreateGameObjectController(concreteGameObject, Utils.PopAt(positionList, 0)));
-            }
+            return 180f / (_difficutySetting.SizeLevel * 2);
         }
 
         private GameObjectController CreateGameObjectController(GameObject concreteGameObject, Vector3 position)
@@ -138,44 +143,22 @@ namespace Assets.Scripts.GamesControllers
             return Instantiate(_GameObjectController, transform).Init(this, concreteGameObject, vector3);
         }
 
-        private static Vector3 RandomVector()
-        {
-            return new Vector3(RandomBetween1and_1(), RandomBetween1and_1(), RandomBetween1and_1());
-        }
-
-        private static float RandomBetween1and_1()
-        {
-            return Random.Range(-0.25f, 0.25f);
-        }
-
         private IEnumerator ShowSoluttion()
         {
             yield return new WaitForSeconds(2f);
             player.FadeCamera();
             foreach (var gameObjectController in _generateObjectList)
                 gameObjectController.ShowConcreteObject();
-            yield return new WaitForSeconds(_showTimeMillis / 1000f);
+            yield return new WaitForSeconds(_difficutySetting.ShowTimeMillis / 1000f);
             player.FadeCamera();
             foreach (var gameObjectController in _generateObjectList)
                 gameObjectController.HideConcreteObject();
 
 
-            StartCoroutine(countDown); //CountDown
+            StartCoroutine(_countDown); //CountDown
         }
 
-        private DifficutySetting GetDifficultySettings()
-        {
-            var difficuty = new DifficutySetting();
-            DIFFICULTY_SETTINGS.TryGetValue(_difficulty, out difficuty);
-            return difficuty;
-        }
-
-        private void SetDifficultySettings(DifficutySetting difficuty)
-        {
-            _maxTimeSeconds = difficuty.MaxTimeSeconds;
-            _showTimeMillis = difficuty.ShowTimeMillis;
-            _sizeLevel = difficuty.SizeLevel;
-        }
+        
 
         private IEnumerator CountDownTimeLeft()
         {
@@ -188,60 +171,66 @@ namespace Assets.Scripts.GamesControllers
             AbortGame();
         }
 
-        public override void FinishGame()
-        {
-            StopCoroutine(countDown);
-            AudioSource.PlayOneShot(_winAudioClip);
-            _gameController.FinishLevel(0, new Punctuation(TimeStamp(), _points, _difficulty), _minPoints < _points);
-            player.FadeCamera();
-            ClearGameArea();
-            Debug.Log("Finalizando juego...");
-        }
-
-        private float TimeStamp()
-        {
-            return _maxTimeSeconds - _timeLeft;
-        }
+        
 
         public override IEnumerator ClickEvent(GameObjectController selectedGameObject)
         {
             if (_selectedGameObject == null)
-            {
                 _selectedGameObject = selectedGameObject;
-                yield break;
-            }
-            yield return new WaitForSeconds(0.4f);
-            if (_selectedGameObject.SameConcreteObject(selectedGameObject))
-                SameGameObjects(selectedGameObject);
             else
-                NotSameGameObjects(selectedGameObject);
+            {
+                yield return new WaitForSeconds(0.4f);
+                CompareSelectedObjects(selectedGameObject);
+            }
+        }
+
+        private void CompareSelectedObjects(GameObjectController selectedGameObject)
+        {
+            if (_selectedGameObject.IsSameConcreteObject(selectedGameObject)) Success(selectedGameObject);
+            else Fail(selectedGameObject);
             _selectedGameObject = null;
         }
 
-        private void NotSameGameObjects(GameObjectController selectedGameObject)
+        private void Fail(GameObjectController selectedGameObject)
         {
             FailAnimation(selectedGameObject);
-            FailurePoints();
+            _punctuation.FailurePoints();
+            scoreController.SetScore(_punctuation.Points);
         }
 
-        private void SameGameObjects(GameObjectController selectedGameObject)
+        private void Success(GameObjectController selectedGameObject)
         {
             WinAnimation(selectedGameObject);
-            SuccessPoints();
+            _punctuation.SuccessPoints();
+            scoreController.SetScore(_punctuation.Points);
             CheckFinishGame();
         }
+
+        private void CheckFinishGame()
+        {
+            if (++_success == _difficutySetting.SizeLevel) FinishGame();
+        }
+
+        #region Utils
+
+        private float TimeStamp()
+        {
+            return _difficutySetting.MaxTimeSeconds - _timeLeft;
+        }
+
+        private DifficutySetting GetDifficultySettings()
+        {
+            return DIFFICULTY_SETTINGS[_difficulty];
+        }
+
+        #endregion
+
+        #region Animation
 
         private void FailAnimation(GameObjectController selectedGameObject)
         {
             _selectedGameObject.HideConcreteObject();
             selectedGameObject.HideConcreteObject();
-        }
-
-        private void CheckFinishGame()
-        {
-            success++;
-            if (success == _sizeLevel)
-                FinishGame();
         }
 
         private void WinAnimation(GameObjectController selectedGameObject)
@@ -250,27 +239,8 @@ namespace Assets.Scripts.GamesControllers
             selectedGameObject.WinPosition();
         }
 
-        private void FailurePoints()
-        {
-            IncreasePointsIn(-2);
-            bonusMultiplier = 1;
-        }
+        #endregion
 
-        private void SuccessPoints()
-        {
-            IncreasePointsIn(10 * bonusMultiplier);
-            bonusMultiplier++;
-        }
-
-        public override void AbortGame()
-        {
-            StopCoroutine(countDown);
-            AudioSource.PlayOneShot(_failAudioClip);
-            _gameController.FinishLevel(0, new Punctuation(), false);
-            player.FadeCamera();
-            ClearGameArea();
-            Debug.Log("Abortando juego...");
-        }
 
         private class DifficutySetting
         {
@@ -290,6 +260,35 @@ namespace Assets.Scripts.GamesControllers
                 MaxTimeSeconds = maxTimeSeconds;
                 ShowTimeMillis = showTimeMillis;
                 SizeLevel = sizeLevel;
+            }
+        }
+
+        private class Punctuation
+        {
+            private readonly int _minPoints = 30;
+            public int Points;
+            private int _bonusMultiplier = 1;
+
+            public void FailurePoints()
+            {
+                IncreasePointsIn(-2);
+                _bonusMultiplier = 1;
+            }
+
+            public void SuccessPoints()
+            {
+                IncreasePointsIn(10 * _bonusMultiplier);
+                _bonusMultiplier++;
+            }
+
+            private void IncreasePointsIn(int points)
+            {
+                Points += points;
+            }
+
+            public bool IsSuccessful()
+            {
+                return _minPoints < Points;
             }
         }
     }

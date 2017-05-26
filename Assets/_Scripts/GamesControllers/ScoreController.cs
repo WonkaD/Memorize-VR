@@ -5,17 +5,17 @@ namespace Assets.Scripts.GamesControllers
 {
     public class ScoreController : MonoBehaviour
     {
-        [SerializeField] private Text Points;
-        [SerializeField] private Text Time;
+        [SerializeField] private Text _points;
+        [SerializeField] private Text _time;
     
 
         public void SetTime(float time)
         {
-            Time.text = "Time left: " + time.ToString("0.000");
+            _time.text = "Time left: " + time.ToString("0.000");
         }
         public void SetScore(int points)
         {
-            Points.text = "Points: "+ points;
+            _points.text = "Points: "+ points;
         }
     }
 }

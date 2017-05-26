@@ -9,6 +9,7 @@ public class ControlPanelGame : MonoBehaviour
     [SerializeField] private RoomGame _roomGame;
     [SerializeField] private Text _levelText;
     private EnumLevels _difficulty = EnumLevels.Easy;
+    private Animator _animator;
 
     public EnumLevels Difficulty
     {
@@ -24,6 +25,7 @@ public class ControlPanelGame : MonoBehaviour
     public void Awake()
     {
         _levelText.text = _difficulty.ToString();
+        _animator = gameObject.GetComponent<Animator>();
     }
 
     public void StartGame()
@@ -34,6 +36,17 @@ public class ControlPanelGame : MonoBehaviour
     public void FinishGame()
     {
         _roomGame.AbortGame();
+    }
+
+    public void OpenPanel()
+    {
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("ClosedState")) _animator.SetTrigger("Action");
+        
+    }
+
+    public void ClosePanel()
+    {
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("OpenState")) _animator.SetTrigger("Action");
     }
 
     public void LevelUp()

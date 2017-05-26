@@ -26,7 +26,7 @@ public class ScoreBoard : MonoBehaviour
     public void UpdateScoreBoard(List<LevelStatus> listLevelStatus)
     {
         Header();
-        if (listLevelStatus == null && listLevelStatus.Count < 1 ) return;
+        if (listLevelStatus == null || listLevelStatus.Count < 1 ) return;
         /* Cuando hay mas niveles
         var level = 1;
         foreach (var levelStatus in listLevelStatus)
