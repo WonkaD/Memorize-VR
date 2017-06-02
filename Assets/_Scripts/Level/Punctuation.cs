@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.Networking.NetworkSystem;
 
-namespace Assets.Scripts
+namespace Assets._Scripts.Level
 {
     [Serializable]
     public class Punctuation : IEquatable<Punctuation>, IComparable<Punctuation>

@@ -10,40 +10,44 @@ namespace Assets
         [SerializeField] private VRButton _vrButton;
         [SerializeField] private Text _buttonText;
 
-        [SerializeField] private string _enableString;
-        [SerializeField] private UnityEvent _enableEvent;
-        
-        [SerializeField] private string _disableString;
-        [SerializeField] private UnityEvent _disableEvent;
+        [SerializeField] private State FirstState;
+        [SerializeField] private State SecondState;
 
         private Player _player;
-        [SerializeField] private bool _enabled = true;
+        [SerializeField] private bool _firstState = true;
 
         // Use this for initialization
         public void Toogle()
         {
             TransformButton();
-            _enabled = !_enabled;
+            _firstState = !_firstState;
         }
 
         private void TransformButton()
         {
-            if (_enabled)
+            if (_firstState )
             {
-                _buttonText.text = _enableString;
-                _vrButton._onClick = _enableEvent;
+                _buttonText.text = FirstState.StateButtonText;
+                _vrButton._onClick = FirstState.StateEvent;
             }
             else
             {
-                _buttonText.text = _disableString;
-                _vrButton._onClick = _disableEvent;
+                _buttonText.text = SecondState.StateButtonText;
+                _vrButton._onClick = SecondState.StateEvent;
             }
         }
 
-        public void setEnable(bool enable)
+        public void SetFirstState(bool enable)
         {
-            _enabled = enable;
-            TransformButton();
+            _firstState = enable;
+            Toogle();
+        }
+
+        [Serializable]
+        public class State
+        {
+            public string StateButtonText;
+            public UnityEvent StateEvent;
         }
     }
 }

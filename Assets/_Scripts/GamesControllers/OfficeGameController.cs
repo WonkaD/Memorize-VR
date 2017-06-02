@@ -1,29 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts;
+using Assets._Scripts.Game;
+using Assets._Scripts.Level;
 using UnityEngine;
 
-
-namespace Assets.Scripts
+namespace Assets._Scripts.GamesControllers
 {
     public class OfficeGameController : MonoBehaviour
     {
-        [SerializeField] private List<Level.Level> _gameLevels;
-        private List<LevelStatus> _saveGame;
-        public string PathFile = "saveGame.bin";
+        [SerializeField] private List<Scripts.Level.Level> _gameLevels;
+        private GameStatus _saveGame;
+        public string PathFile = "SaveGame.bin";
         public ScoreBoard ScoreBoard;
 
         // Use this for initialization
         private void Start()
         {
-            if (!Load())
-            {
-                UnlockFirstLevel();
-                ScoreBoard.UpdateScoreBoard(null);
-            }
-            ScoreBoard.UpdateScoreBoard(_saveGame);
+            Load();
+            UnlockFirstLevel();
+            RestoreGameStatus();
+            ScoreBoard.UpdateScoreBoard(_saveGame.LevelStates);
         }
 
-        public List<Level.Level> GetLevelsScoreRecords()
+        public List<Scripts.Level.Level> GetLevelsScoreRecords()
         {
             return _gameLevels;
         }
@@ -36,27 +36,29 @@ namespace Assets.Scripts
 
         private void Save()
         {
-            var statusList = new List<LevelStatus>();
+            var statusList = new List<LevelState>();
             foreach (var gameLevel in _gameLevels)
-                statusList.Add(new LevelStatus(gameLevel));
-            _saveGame = statusList;
+                statusList.Add(new LevelState(gameLevel));
+            _saveGame.LevelStates = statusList;
             BinaryFileManager.Save(PathFile, _saveGame);
-            //TODO  ScoreBoard
-            ScoreBoard.UpdateScoreBoard(_saveGame);
+            ScoreBoard.UpdateScoreBoard(_saveGame.LevelStates);
         }
 
-        private bool Load()
+        private void Load()
         {
-            _saveGame = BinaryFileManager.Load(PathFile);
-            var savedLevels = _saveGame;
-            if (savedLevels == null || _gameLevels == null) return false;
+            _saveGame = BinaryFileManager.Load<GameStatus>(PathFile);
+            //return _saveGame != null && _saveGame.LevelStates != null;
+        }
+
+        private void RestoreGameStatus()
+        {
+            var savedLevels = _saveGame.LevelStates;
 
             for (var i = 0; i < savedLevels.Count; i++)
                 RestoreLevel(savedLevels[i], _gameLevels[i]);
-            return true;
         }
 
-        private static void RestoreLevel(LevelStatus savedLevel, Level.Level gameLevel)
+        private static void RestoreLevel(LevelState savedLevel, Scripts.Level.Level gameLevel)
         {
             gameLevel.RecordPunctuations = savedLevel.Punctuations;
             gameLevel.LevelDoor.SetUnlock(savedLevel.Unlock);
@@ -78,22 +80,16 @@ namespace Assets.Scripts
             level.OpenDoorAndUnlock();
             if (!gameComplete) return;
 
-            UnlockNextLevel(levelIndex);
+            UnlockNextLevelIfExist(levelIndex);
             level.AddPunctuation(punctuation);
             level.OpenDoorAndUnlock();
             Save();
         }
 
-        private void UnlockNextLevel(int actualLevelIndex)
+        private void UnlockNextLevelIfExist(int actualLevelIndex)
         {
-            actualLevelIndex++;
-            if (actualLevelIndex >= _gameLevels.Count) return;
-            _gameLevels[actualLevelIndex].UnlockLevel();
+            if (++actualLevelIndex < _gameLevels.Count) _gameLevels[actualLevelIndex].UnlockLevel();
         }
 
-        // Update is called once per frame
-        private void Update()
-        {
-        }
     }
 }

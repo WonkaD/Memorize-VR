@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -9,15 +10,15 @@ namespace Assets.Scripts
     {
 
 
-        public static List<LevelStatus> Load(string pathFile)
+        public static T Load <T> (string pathFile) where T:class,new()
         {
-            if (!File.Exists(pathFile)) return null;
+            if (!File.Exists(pathFile)) return new T();
             IFormatter formatter = new BinaryFormatter();
-            return Deseralize(formatter, FileToByteArray(pathFile));
+            return Deseralize<T> (formatter, FileToByteArray(pathFile));
 
         }
 
-        public static void Save(string pathFile, List<LevelStatus> gameStatus)
+        public static void Save<T>(string pathFile, T gameStatus)
         {
             using (FileStream outFile = File.Create(pathFile))
             {
@@ -44,12 +45,12 @@ namespace Assets.Scripts
             }
         }
 
-        private static List<LevelStatus> Deseralize(IFormatter formatter, byte[] buffer)
+        private static T Deseralize <T> (IFormatter formatter, byte[] buffer) where T:class, new()
         {
             using (MemoryStream stream = new MemoryStream(buffer))
             {
-                List<LevelStatus> deserialize = formatter.Deserialize(stream) as List<LevelStatus>;
-                return deserialize;
+                T deserialize = formatter.Deserialize(stream) as T;
+                return deserialize?? new T();
             }
         }
 

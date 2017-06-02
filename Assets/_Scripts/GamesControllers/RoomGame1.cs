@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets._Scripts.GamesControllers;
 using UnityEngine;
 
 namespace Assets.Scripts.GamesControllers
@@ -35,9 +36,9 @@ namespace Assets.Scripts.GamesControllers
             new Dictionary<EnumLevels, DifficutySetting>
             {
                 {EnumLevels.Easy, new DifficutySetting(15f, 3000, 4)},
-                {EnumLevels.Medium, new DifficutySetting(18f, 3500, 6)},
-                {EnumLevels.Hard, new DifficutySetting(23f, 4500, 8)},
-                {EnumLevels.Extreme, new DifficutySetting(30f, 6500, 10)}
+                {EnumLevels.Medium, new DifficutySetting(20f, 3500, 6)},
+                {EnumLevels.Hard, new DifficutySetting(30f, 6000, 8)},
+                {EnumLevels.Extreme, new DifficutySetting(35f, 7000, 10)}
             };
 
 
@@ -63,7 +64,7 @@ namespace Assets.Scripts.GamesControllers
         {
             StopCoroutine(_countDown);
             AudioSource.PlayOneShot(_winAudioClip);
-            _gameController.FinishLevel(0, new Scripts.Punctuation(TimeStamp(), _punctuation.Points, _difficulty),
+            _gameController.FinishLevel(0, new _Scripts.Level.Punctuation(TimeStamp(), _punctuation.Points, _difficulty),
                 _punctuation.IsSuccessful());
             ClearGameArea();
         }
@@ -72,7 +73,7 @@ namespace Assets.Scripts.GamesControllers
         {
             StopCoroutine(_countDown);
             AudioSource.PlayOneShot(_failAudioClip);
-            _gameController.FinishLevel(0, new Scripts.Punctuation(), false);
+            _gameController.FinishLevel(0, new _Scripts.Level.Punctuation(), false);
             ClearGameArea();
         }
 
@@ -186,7 +187,7 @@ namespace Assets.Scripts.GamesControllers
 
         private void CompareSelectedObjects(GameObjectController selectedGameObject)
         {
-            if (_selectedGameObject.IsSameConcreteObject(selectedGameObject)) Success(selectedGameObject);
+            if (_selectedGameObject != null && _selectedGameObject.IsSameConcreteObject(selectedGameObject)) Success(selectedGameObject);
             else Fail(selectedGameObject);
             _selectedGameObject = null;
         }

@@ -12,8 +12,10 @@ public class DynamicMenuController : MonoBehaviour
 	void Start ()
     {
         var player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        controller.GetComponent<ToggleButton>().setEnable(player._firstPersonController.enabled);
+        controller.GetComponent<ToggleButton>().SetFirstState(player._firstPersonController.enabled);
+        //controller.GetComponent<ToggleButton>().SetFirstState(true);
         controller.GetComponent<VRButton>().SetEnable(player._isVRPresent);
+        //controller.GetComponent<VRButton>().SetEnable(true);
     }
 
     // Update is called once per frame

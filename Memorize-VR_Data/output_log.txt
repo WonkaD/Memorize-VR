@@ -5,7 +5,7 @@ Direct3D:
     Renderer: NVIDIA GeForce GTX 770 (ID=0x1184)
     Vendor:   NVIDIA
     VRAM:     2017 MB
-    Driver:   22.21.13.8189
+    Driver:   22.21.13.8205
 Begin MonoManager ReloadAssembly
 Platform assembly: C:\Memorize-VR\Memorize-VR_Data\Managed\UnityEngine.dll (this message is harmless)
 Loading C:\Memorize-VR\Memorize-VR_Data\Managed\UnityEngine.dll into Unity Child Domain
@@ -19,7 +19,7 @@ Platform assembly: C:\Memorize-VR\Memorize-VR_Data\Managed\UnityEngine.Analytics
 Loading C:\Memorize-VR\Memorize-VR_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
 Platform assembly: C:\Memorize-VR\Memorize-VR_Data\Managed\UnityEngine.VR.dll (this message is harmless)
 Loading C:\Memorize-VR\Memorize-VR_Data\Managed\UnityEngine.VR.dll into Unity Child Domain
-- Completed reload, in  0.096 seconds
+- Completed reload, in  0.065 seconds
 Platform assembly: C:\Memorize-VR\Memorize-VR_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Memorize-VR\Memorize-VR_Data\Managed\System.dll (this message is harmless)
 OnLevelWasLoaded was found on OVRScreenFade
@@ -32,16 +32,16 @@ desktop: 1920x1080 60Hz; virtual: 3840x1080 at -1920,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 0.702595 ms
+UnloadTime: 0.735297 ms
 Unity v5.6.0f3, Oculus Utilities v1.10.0, OVRPlugin v1.12.0, SDK v0.0.0.
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
 Setting up 4 worker threads for Enlighten.
-  Thread -> id: 459c -> priority: 1 
-  Thread -> id: 45a0 -> priority: 1 
-  Thread -> id: 45a4 -> priority: 1 
-  Thread -> id: 45a8 -> priority: 1 
+  Thread -> id: 30b0 -> priority: 1 
+  Thread -> id: 18f8 -> priority: 1 
+  Thread -> id: 466c -> priority: 1 
+  Thread -> id: 1b64 -> priority: 1 
 Starting game...
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
@@ -50,19 +50,15 @@ Starting game...
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
-0.137788
+0.1364604
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
-0.1391705
+0.2368661
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
 Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-0.9
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
 0.9
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
@@ -83,216 +79,18 @@ The tree Rock Type2 04 must use the Nature/Soft Occlusion shader. Otherwise bill
  
 (Filename:  Line: 140)
 
-UnloadTime: 3.182116 ms
+0.9
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+UnloadTime: 3.230404 ms
 Unity v5.6.0f3, Oculus Utilities v1.10.0, OVRPlugin v1.12.0, SDK v0.0.0.
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
-NullReferenceException: Object reference not set to an instance of an object
-  at ScoreBoard.UpdateScoreBoard (System.Collections.Generic.List`1 listLevelStatus) [0x00000] in <filename unknown>:0 
-  at Assets.Scripts.OfficeGameController.Start () [0x00000] in <filename unknown>:0 
- 
-(Filename:  Line: -1)
 
-
-Unloading 18 unused Assets to reduce memory usage. Loaded Objects now: 4075.
-Total: 1.342084 ms (FindLiveObjects: 0.120079 ms CreateObjectMapping: 0.064383 ms MarkObjects: 0.522219 ms  DeleteObjects: 0.635145 ms)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Empezando juego...
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Finalizando juego...
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
-
-Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
- 
-(Filename:  Line: 371)
+Unloading 18 unused Assets to reduce memory usage. Loaded Objects now: 4059.
+Total: 1.468295 ms (FindLiveObjects: 0.182419 ms CreateObjectMapping: 0.097596 ms MarkObjects: 0.674235 ms  DeleteObjects: 0.513277 ms)
 
 Internal: JobTempAlloc has allocations that are more than 4 frames old - this is not allowed and likely a leak
  
@@ -307,12 +105,12 @@ Internal: JobTempAlloc has allocations that are more than 4 frames old - this is
 (Filename:  Line: 371)
 
 Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 3.920480 ms
+UnloadTime: 4.763083 ms
 Unity v5.6.0f3, Oculus Utilities v1.10.0, OVRPlugin v1.12.0, SDK v0.0.0.
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
 
-Unloading 440 unused Assets to reduce memory usage. Loaded Objects now: 947.
-Total: 2.667050 ms (FindLiveObjects: 0.062083 ms CreateObjectMapping: 0.036279 ms MarkObjects: 0.245525 ms  DeleteObjects: 2.322396 ms)
+Unloading 440 unused Assets to reduce memory usage. Loaded Objects now: 949.
+Total: 2.433533 ms (FindLiveObjects: 0.040111 ms CreateObjectMapping: 0.037045 ms MarkObjects: 0.225596 ms  DeleteObjects: 2.130523 ms)
 

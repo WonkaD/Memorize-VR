@@ -9,19 +9,19 @@ namespace Assets.Scripts
     {
 
 
-        public static List<LevelStatus> Load(string pathFile)
+        public static T Load<T>(string pathFile) where T:class,new()
         {
-            if (!File.Exists(pathFile)) return null;
-            XmlSerializer formatter = new XmlSerializer(typeof(List<LevelStatus>), new Type[] { typeof(LevelStatus) });
-            return Deseralize(formatter, FileToByteArray(pathFile));
+            if (!File.Exists(pathFile)) return new T();
+            XmlSerializer formatter = new XmlSerializer(typeof(T), new Type[] { typeof(T) });
+            return Deseralize <T>(formatter, FileToByteArray(pathFile));
 
         }
 
-        public static void Save(string pathFile, List<LevelStatus> gameStatus)
+        public static void Save <T>(string pathFile, T gameStatus)
         {
             using (FileStream outFile = File.Create(pathFile))
             {
-                XmlSerializer formatter = new XmlSerializer(typeof(List<LevelStatus>), new Type[] { typeof(LevelStatus) });
+                XmlSerializer formatter = new XmlSerializer(typeof(T), new Type[] { typeof(T) });
                 formatter.Serialize(outFile, gameStatus);
             }
         }
@@ -38,12 +38,12 @@ namespace Assets.Scripts
             }
         }
 
-        private static List<LevelStatus> Deseralize(XmlSerializer formatter, byte[] buffer)
+        private static T Deseralize<T>(XmlSerializer formatter, byte[] buffer) where T : class,new()
         {
             using (MemoryStream stream = new MemoryStream(buffer))
             {
-                List<LevelStatus> deserialize = formatter.Deserialize(stream) as List<LevelStatus>;
-                return deserialize;
+                T deserialize = formatter.Deserialize(stream) as T;
+                return deserialize?? new T();
             }
         }
 
