@@ -8,10 +8,10 @@ namespace Assets._Scripts.Game
     public class GameStatus
     {
         public List<LevelState> LevelStates;
-        public List<Tutorial> Tutorials;
+        public List<bool> Tutorials;
 
 
-        public GameStatus(List<LevelState> levelStates, List<Tutorial> tutorials)
+        public GameStatus(List<LevelState> levelStates, List<bool> tutorials)
         {
             LevelStates = levelStates;
             Tutorials = tutorials;
@@ -21,7 +21,7 @@ namespace Assets._Scripts.Game
         public GameStatus()
         {
             LevelStates = new List<LevelState>();
-            Tutorials = new List<Tutorial>();
+            Tutorials = new List<bool>();
         }
 
     }

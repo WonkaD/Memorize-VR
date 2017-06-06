@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts;
+using Assets.Scripts.Level;
 using Assets._Scripts.Level;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -24,7 +25,7 @@ public class ScoreBoard : MonoBehaviour
     {
     }
 
-    public void UpdateScoreBoard(List<LevelState> listLevelStatus)
+    public void UpdateScoreBoard(List<Level> listLevelStatus)
     {
         Header();
         if (listLevelStatus == null || listLevelStatus.Count < 1 ) return;
@@ -32,10 +33,10 @@ public class ScoreBoard : MonoBehaviour
         var level = 1;
         foreach (var levelStatus in listLevelStatus)
         {*/
-        listLevelStatus[0].Punctuations.Sort();
+        listLevelStatus[0].RecordPunctuations.Sort();
         TopScores(listLevelStatus);
 
-        var punctuations = listLevelStatus[0].Punctuations;
+        var punctuations = listLevelStatus[0].RecordPunctuations;
         if (punctuations.Count > 3)
             foreach (var punctuation in punctuations.GetRange(3, punctuations.Count-3))
                 _scoreText.text += ToString(1, punctuation);
@@ -43,9 +44,9 @@ public class ScoreBoard : MonoBehaviour
        // }
     }
 
-    private void TopScores(List<LevelState> listLevelStatus)
+    private void TopScores(List<Level> listLevelStatus)
     {
-        List<Punctuation> punctuations = listLevelStatus[0].Punctuations;
+        List<Punctuation> punctuations = listLevelStatus[0].RecordPunctuations;
         foreach (var punctuation in punctuations.GetRange(0, VerifyCountMoreThan3(punctuations)))
             _topScoreText.text += ToString(1, punctuation);
 
