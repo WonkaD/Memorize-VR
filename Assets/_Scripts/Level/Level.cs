@@ -10,8 +10,8 @@ namespace Assets.Scripts.Level
     public class Level
     {
 
-        [SerializeField] public RoomGame GameLevel;
-        [SerializeField] public VRDoor LevelDoor;
+        [SerializeField] public RoomGame RoomGame;
+        [SerializeField] public VRDoor DoorOfLevel;
         public List<Punctuation> RecordPunctuations = new List<Punctuation>();
 
         public void AddPunctuation(Punctuation punctuation)
@@ -21,17 +21,17 @@ namespace Assets.Scripts.Level
 
         public void OpenDoorAndUnlock()
         {
-            LevelDoor.OpenDoorAndUnlock();
+            DoorOfLevel.OpenDoorAndUnlock();
         }
 
         public void CloseDoorAndLock()
         {
-            LevelDoor.CloseDoorAndLock();
+            DoorOfLevel.CloseDoorAndLock();
         }
 
         public void UnlockLevel()
         {
-            LevelDoor.SetUnlock(true);
+            DoorOfLevel.SetUnlock(true);
         }
     }
 }

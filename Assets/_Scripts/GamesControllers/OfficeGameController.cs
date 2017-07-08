@@ -3,6 +3,7 @@ using System.Linq;
 using Assets.Scripts;
 using Assets._Scripts.Game;
 using Assets._Scripts.Level;
+using Assets._Scripts.Save_Game;
 using UnityEngine;
 
 namespace Assets._Scripts.GamesControllers
@@ -11,7 +12,6 @@ namespace Assets._Scripts.GamesControllers
     {
         [SerializeField] private List<Scripts.Level.Level> _gameLevels;
         [SerializeField] private List<GameObject> _tutorials;
-        [SerializeField] private readonly string _pathFile = "SaveGame.bin";
         [SerializeField] private ScoreBoard _scoreBoard;
 
         // Use this for initialization
@@ -31,32 +31,41 @@ namespace Assets._Scripts.GamesControllers
         private void UnlockFirstLevel()
         {
             var firstDoor = _gameLevels.FirstOrDefault();
-            if (firstDoor != null) firstDoor.LevelDoor.SetUnlock(true);
+            if (firstDoor != null) firstDoor.DoorOfLevel.SetUnlock(true);
         }
 
-        private void Save()
+        public void Save()
         {
             var _saveGame = new GameStatus();
+            SaveLevels(_saveGame);
+            SaveTutorials(_saveGame);
+            BinaryFileManager.Save(SaveGameManager.FullNameFile(), _saveGame);
+            _scoreBoard.UpdateScoreBoard(_gameLevels);
+        }
+
+        private void SaveLevels(GameStatus _saveGame)
+        {
             foreach (var gameLevel in _gameLevels)
                 _saveGame.LevelStates.Add(new LevelState(gameLevel));
+        }
+
+        private void SaveTutorials(GameStatus _saveGame)
+        {
             foreach (var tutorial in _tutorials)
-                _saveGame.Tutorials.Add(tutorial == null);
-            BinaryFileManager.Save(_pathFile, _saveGame);
-            _scoreBoard.UpdateScoreBoard(_gameLevels);
+                _saveGame.TutorialStates.Add(tutorial == null);
         }
 
         private GameStatus Load()
         {
-            return BinaryFileManager.Load<GameStatus>(_pathFile);
-            //return _saveGame != null && _saveGame.LevelStates != null;
+            return BinaryFileManager.Load<GameStatus>(SaveGameManager.FullNameFile());
         }
 
         private void RestoreGameStatus(GameStatus saveGame)
         {
             for (var i = 0; i < saveGame.LevelStates.Count; i++)
                 RestoreLevel(saveGame.LevelStates[i], _gameLevels[i]);
-            for (var i = 0; i < saveGame.Tutorials.Count; i++)
-                RestoreTutorial(saveGame.Tutorials[i], _tutorials[i]);
+            for (var i = 0; i < saveGame.TutorialStates.Count; i++)
+                RestoreTutorial(saveGame.TutorialStates[i], _tutorials[i]);
         }
 
         private void RestoreTutorial(bool saveGameTutorial, GameObject tutorial)
@@ -67,7 +76,7 @@ namespace Assets._Scripts.GamesControllers
         private static void RestoreLevel(LevelState savedLevel, Scripts.Level.Level gameLevel)
         {
             gameLevel.RecordPunctuations = savedLevel.Punctuations;
-            gameLevel.LevelDoor.SetUnlock(savedLevel.Unlock);
+            gameLevel.DoorOfLevel.SetUnlock(savedLevel.Unlock);
         }
 
         public void StartLevel(int levelIndex)

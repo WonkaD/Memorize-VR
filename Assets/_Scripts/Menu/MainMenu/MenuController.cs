@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Assets;
 using Assets.Scripts;
+using Assets._Scripts.Save_Game;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,11 +12,10 @@ public class MenuController : MonoBehaviour
     [SerializeField] private Canvas menuDuplicateCanvas;
     [SerializeField] private Canvas menuConfirmationCanvas;
 
-    public string PathFile = "saveGame.bin";
-
     private void Start()
     {
         _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        SaveGameManager.Create();
     }
 
     private IEnumerator BackGroundLoadOffice(int scene)
@@ -53,7 +53,7 @@ public class MenuController : MonoBehaviour
 
     public void RemoveAndStartGame()
     {
-        BinaryFileManager.Remove(PathFile);
+        SaveGameManager.Remove();
         StartGame();
     }
 

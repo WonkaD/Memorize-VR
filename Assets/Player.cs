@@ -19,8 +19,8 @@ namespace Assets
         // Use this for initialization
         void Start ()
         {
-            _isKeyBoardOrControllerPresent = IsNotAndroidPlatform() || IsControllerPresent();
-            _isVRPresent = VRDevice.isPresent;
+            _isKeyBoardOrControllerPresent = !IsAndroidPlatform() || IsControllerPresent();
+            _isVRPresent = VRDevice.isPresent || IsAndroidPlatform();
             UseBestPlayerMode();
         }
 
@@ -29,9 +29,9 @@ namespace Assets
             return Input.GetJoystickNames().Length > 0 && Input.GetJoystickNames()[0].Contains("Controller");
         }
 
-        private static bool IsNotAndroidPlatform()
+        private static bool IsAndroidPlatform()
         {
-            return Application.platform != RuntimePlatform.Android;
+            return Application.platform == RuntimePlatform.Android;
         }
 
         private void UseBestPlayerMode()

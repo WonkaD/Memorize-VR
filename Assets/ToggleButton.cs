@@ -16,14 +16,20 @@ namespace Assets
         private Player _player;
         [SerializeField] private bool _firstState = true;
 
-        // Use this for initialization
-        public void Toogle()
+        void Start()
         {
-            TransformButton();
+            SetButtonState();
             _firstState = !_firstState;
         }
 
-        private void TransformButton()
+        // Use this for initialization
+        public void Toogle()
+        {
+            SetButtonState();
+            _firstState = !_firstState;
+        }
+
+        private void SetButtonState()
         {
             if (_firstState )
             {
